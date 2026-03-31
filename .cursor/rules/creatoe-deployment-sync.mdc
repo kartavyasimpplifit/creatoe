@@ -1,0 +1,40 @@
+---
+description: Creatoe deployment sync - always keep frontend and backend in sync
+alwaysApply: true
+---
+
+# Creatoe Deployment Sync
+
+## Current Deployment State
+
+- **GitHub Repo:** https://github.com/kartavyasimpplifit/creatoe (unified - backend + frontend)
+- **Frontend (Vercel):** https://frontend-eta-five-22.vercel.app
+- **Vercel Project:** kartavya-atris-projects/frontend
+- **Backend runs locally** at http://localhost:8000, tunneled via Cloudflare
+
+## Git + Deploy Commands (PATH setup required)
+
+```powershell
+$env:PATH = "C:\Program Files\GitHub CLI;" + "C:\Program Files\Git\cmd;" + $env:PATH
+```
+
+## After ANY code change
+
+1. Commit to the unified repo: `cd "c:\Graph Ai"; git add -A; git commit -m "msg"; git push origin master`
+2. If frontend changed: `cd frontend; npx vercel --yes --prod`
+3. If backend changed: restart uvicorn + restart tunnel
+
+## After backend URL changes
+
+1. `cd frontend; npx vercel env rm NEXT_PUBLIC_API_URL production --yes`
+2. `echo "NEW_URL" | npx vercel env add NEXT_PUBLIC_API_URL production`
+3. `npx vercel --yes --prod`
+4. Update `frontend/.env.local` for local dev
+
+## Design System (TikTok-style)
+
+- Background: #000000, Cards: #161616, Accent: #818cf8
+- Sidebar: 56px collapsed, 200px on hover
+- Icons: lucide-react only (no emojis)
+- Font mono: JetBrains Mono via `style={{ fontFamily: "var(--font-mono)" }}`
+- Brand: "Creatoe" everywhere, NEVER "CreatorLens"
