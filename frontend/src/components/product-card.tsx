@@ -3,52 +3,60 @@
 import type { ProductData } from "@/lib/api";
 import { formatNumber } from "@/lib/api";
 
+const BAND_STYLES: Record<string, string> = {
+  budget: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20",
+  mid: "text-blue-400 bg-blue-500/10 border-blue-500/20",
+  "mid-premium": "text-purple-400 bg-purple-500/10 border-purple-500/20",
+  premium: "text-amber-400 bg-amber-500/10 border-amber-500/20",
+  "ultra-premium": "text-rose-400 bg-rose-500/10 border-rose-500/20",
+};
+
 export function ProductCard({ product, totalMatched, totalDisqualified }: {
   product: ProductData;
   totalMatched: number;
   totalDisqualified: number;
 }) {
-  const bandColors: Record<string, string> = {
-    budget: "text-emerald-400 bg-emerald-400/10",
-    mid: "text-blue-400 bg-blue-400/10",
-    "mid-premium": "text-purple-400 bg-purple-400/10",
-    premium: "text-amber-400 bg-amber-400/10",
-    "ultra-premium": "text-rose-400 bg-rose-400/10",
-  };
-
   return (
-    <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
-      <div className="flex items-start gap-3 mb-3">
+    <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 animate-fade-in">
+      <div className="flex items-start gap-4 mb-4">
         {product.image_url ? (
-          <img src={product.image_url} alt="" className="w-12 h-12 rounded-lg object-cover bg-zinc-800" />
+          <img src={product.image_url} alt="" className="w-14 h-14 rounded-xl object-cover bg-[var(--bg-elevated)]" />
         ) : (
-          <div className="w-12 h-12 rounded-lg bg-indigo-500/10 flex items-center justify-center text-xl">📱</div>
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[var(--accent-dim)] to-purple-500/10 flex items-center justify-center text-2xl">
+            📱
+          </div>
         )}
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white leading-tight">
+          <div className="text-base font-bold text-[var(--text)] leading-tight">
             {product.brand} {product.model}
           </div>
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
             {product.price > 0 && (
-              <span className="text-xs font-mono text-zinc-300">₹{product.price.toLocaleString()}</span>
+              <span className="text-sm font-semibold font-[family-name:var(--font-mono)] text-[var(--gold)]">
+                ₹{product.price.toLocaleString()}
+              </span>
             )}
-            <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${bandColors[product.price_band] || "text-zinc-400 bg-zinc-800"}`}>
-              {product.price_band}
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${BAND_STYLES[product.price_band] || "text-[var(--text-dim)] bg-[var(--bg-elevated)]"}`}>
+              {product.price_band.toUpperCase()}
             </span>
             {product.key_features.slice(0, 3).map(f => (
-              <span key={f} className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-400">{f}</span>
+              <span key={f} className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-muted)] border border-[var(--border)]">
+                {f}
+              </span>
             ))}
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-between pt-3 border-t border-zinc-800">
+      <div className="flex items-end justify-between pt-4 border-t border-[var(--border)]">
         <div>
-          <div className="text-xl font-bold text-white font-mono">{formatNumber(totalMatched)}</div>
-          <div className="text-[10px] text-zinc-500 uppercase tracking-wider">Creators Matched</div>
+          <div className="text-2xl font-extrabold text-[var(--text)] font-[family-name:var(--font-mono)] tracking-tight">
+            {formatNumber(totalMatched)}
+          </div>
+          <div className="text-[10px] text-[var(--text-dim)] uppercase tracking-[0.15em] mt-0.5 font-medium">Creators Matched</div>
         </div>
         <div className="text-right">
-          <div className="text-sm font-mono text-zinc-500">{totalDisqualified}</div>
-          <div className="text-[10px] text-zinc-600 uppercase tracking-wider">Filtered Out</div>
+          <div className="text-sm font-semibold font-[family-name:var(--font-mono)] text-[var(--text-dim)]">{totalDisqualified}</div>
+          <div className="text-[10px] text-[var(--text-dim)] uppercase tracking-[0.15em] mt-0.5">Filtered</div>
         </div>
       </div>
     </div>

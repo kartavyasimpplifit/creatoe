@@ -200,3 +200,22 @@ export function formatNumber(n: number): string {
   if (n >= 1000) return `${(n / 1000).toFixed(0)}K`;
   return n.toString();
 }
+
+export interface SearchResult {
+  query: Record<string, unknown>;
+  mode: "creators" | "videos";
+  total_results: number;
+  free_results: Record<string, unknown>[];
+  locked_results: Record<string, unknown>[];
+  upgrade_message: string;
+}
+
+export async function aiSearch(query: string, mode?: string): Promise<SearchResult> {
+  const res = await fetch(`${API_BASE}/api/search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query, mode }),
+  });
+  if (!res.ok) throw new Error("Search failed");
+  return res.json();
+}

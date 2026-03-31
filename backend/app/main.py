@@ -16,6 +16,7 @@ from typing import Optional
 from backend.app.models.database import SessionLocal, Creator, Video, init_db
 from backend.app.scraper.product_scraper import scrape_product, ProductData
 from backend.app.scorer.scoring_engine import score_all_for_product, score_creator_for_product
+from backend.app.search.query_parser import parse_query, get_date_cutoff
 
 app = FastAPI(title="CreatorLens API", version="2.0.0")
 
@@ -582,3 +583,214 @@ def draft_outreach_email(creator_id: int, product_url: Optional[str] = None):
 
     session.close()
     return email
+
+
+# ── AI Search ────────────────────────────────────────────
+
+class SearchRequest(BaseModel):
+    query: str
+    mode: Optional[str] = None  # "creators" or "videos"
+    limit: int = 50
+
+
+@app.post("/api/search")
+def ai_search(req: SearchRequest):
+    """Natural language search for creators and videos."""
+    parsed = parse_query(req.query)
+    if req.mode:
+        parsed.mode = req.mode
+
+    session = SessionLocal()
+    FREE_CREATOR_LIMIT = 8
+    FREE_VIDEO_LIMIT = 4
+    LOCKED_SHOW = 4
+
+    if parsed.mode == "videos":
+        query = session.query(Video).filter(Video.is_analyzed == True)
+
+        if parsed.brands:
+            brand_vids = []
+            for v in query.all():
+                if v.analysis:
+                    for p in v.analysis.get("products_mentioned", []):
+                        if p.get("brand", "") in parsed.brands:
+                            brand_vids.append(v.id)
+                            break
+            if brand_vids:
+                query = session.query(Video).filter(Video.id.in_(brand_vids))
+
+        if parsed.format_type:
+            fmt_vids = []
+            for v in query.all():
+                if v.analysis and v.analysis.get("format") == parsed.format_type:
+                    fmt_vids.append(v.id)
+            if fmt_vids:
+                query = session.query(Video).filter(Video.id.in_(fmt_vids))
+
+        if parsed.language:
+            lang_vids = []
+            for v in query.all():
+                if v.analysis and v.analysis.get("language") == parsed.language:
+                    lang_vids.append(v.id)
+            if lang_vids:
+                query = session.query(Video).filter(Video.id.in_(lang_vids))
+
+        if parsed.days_back > 0:
+            cutoff = get_date_cutoff(parsed.days_back)
+            if cutoff:
+                query = query.filter(Video.published_at >= cutoff)
+
+        if parsed.min_views > 0:
+            query = query.filter(Video.view_count >= parsed.min_views)
+
+        sort_map = {
+            "view_count": Video.view_count.desc(),
+            "like_count": Video.like_count.desc(),
+            "engagement_rate": Video.engagement_rate.desc(),
+            "published_at": Video.published_at.desc(),
+        }
+        order = sort_map.get(parsed.sort_by, Video.view_count.desc())
+        query = query.order_by(order)
+
+        total = query.count()
+        videos = query.limit(FREE_VIDEO_LIMIT + LOCKED_SHOW + 20).all()
+
+        free_videos = []
+        locked_videos = []
+        for i, v in enumerate(videos):
+            vid_data = {
+                "video_id": v.video_id,
+                "title": v.title,
+                "thumbnail_url": v.thumbnail_url,
+                "view_count": v.view_count,
+                "like_count": v.like_count,
+                "comment_count": v.comment_count,
+                "engagement_rate": v.engagement_rate,
+                "published_at": v.published_at,
+                "duration": v.duration,
+                "channel_id": v.channel_id,
+                "analysis": v.analysis or {},
+            }
+
+            creator = session.query(Creator).filter(Creator.channel_id == v.channel_id).first()
+            if creator:
+                vid_data["creator_name"] = creator.channel_title
+                vid_data["creator_thumbnail"] = creator.thumbnail_url
+                vid_data["creator_subscribers"] = creator.subscriber_count
+                vid_data["creator_id"] = creator.id
+            else:
+                vid_data["creator_name"] = ""
+                vid_data["creator_thumbnail"] = ""
+                vid_data["creator_subscribers"] = 0
+                vid_data["creator_id"] = 0
+
+            if i < FREE_VIDEO_LIMIT:
+                vid_data["locked"] = False
+                free_videos.append(vid_data)
+            elif i < FREE_VIDEO_LIMIT + LOCKED_SHOW:
+                vid_data["locked"] = True
+                vid_data["title"] = vid_data["title"][:20] + "..."
+                vid_data["analysis"] = {}
+                locked_videos.append(vid_data)
+
+        session.close()
+        return {
+            "query": parsed.to_dict(),
+            "mode": "videos",
+            "total_results": total,
+            "free_results": free_videos,
+            "locked_results": locked_videos,
+            "upgrade_message": f"{total - FREE_VIDEO_LIMIT} more videos available. Unlock full video intelligence.",
+        }
+
+    else:
+        query = session.query(Creator).filter(
+            Creator.phone_video_count > 0,
+            Creator.subscriber_count >= 1000,
+        )
+
+        if parsed.language:
+            query = query.filter(Creator.primary_language == parsed.language)
+
+        if parsed.tier:
+            query = query.filter(Creator.tier == parsed.tier)
+
+        if parsed.min_subscribers > 0:
+            query = query.filter(Creator.subscriber_count >= parsed.min_subscribers)
+        if parsed.max_subscribers > 0:
+            query = query.filter(Creator.subscriber_count <= parsed.max_subscribers)
+
+        if parsed.min_engagement > 0:
+            query = query.filter(Creator.engagement_rate >= parsed.min_engagement)
+
+        if parsed.brands:
+            brand_creators = set()
+            for v in session.query(Video).filter(Video.is_analyzed == True).all():
+                if v.analysis:
+                    for p in v.analysis.get("products_mentioned", []):
+                        if p.get("brand", "") in parsed.brands:
+                            brand_creators.add(v.channel_id)
+                            break
+            if brand_creators:
+                query = query.filter(Creator.channel_id.in_(brand_creators))
+
+        if parsed.format_type:
+            fmt_creators = set()
+            for v in session.query(Video).filter(Video.is_analyzed == True).all():
+                if v.analysis and v.analysis.get("format") == parsed.format_type:
+                    fmt_creators.add(v.channel_id)
+            if fmt_creators:
+                query = query.filter(Creator.channel_id.in_(fmt_creators))
+
+        sort_map = {
+            "match_score": Creator.combined_score.desc(),
+            "subscriber_count": Creator.subscriber_count.desc(),
+            "engagement_rate": Creator.engagement_rate.desc(),
+            "view_count": Creator.view_count.desc(),
+        }
+        order = sort_map.get(parsed.sort_by, Creator.combined_score.desc())
+        query = query.order_by(order)
+
+        total = query.count()
+        creators = query.limit(FREE_CREATOR_LIMIT + LOCKED_SHOW + 20).all()
+
+        free_creators = []
+        locked_creators = []
+        for i, c in enumerate(creators):
+            c_data = {
+                "id": c.id,
+                "channel_id": c.channel_id,
+                "name": c.channel_title,
+                "thumbnail_url": c.thumbnail_url,
+                "subscriber_count": c.subscriber_count,
+                "tier": c.tier,
+                "primary_language": c.primary_language,
+                "engagement_rate": c.engagement_rate,
+                "phone_video_count": c.phone_video_count,
+                "estimated_cost_min": c.estimated_cost_min,
+                "estimated_cost_max": c.estimated_cost_max,
+                "custom_url": c.custom_url,
+            }
+
+            if i < FREE_CREATOR_LIMIT:
+                c_data["locked"] = False
+                c_data["combined_score"] = c.combined_score
+                c_data["audience_fit_score"] = c.audience_fit_score
+                c_data["content_proof_score"] = c.content_proof_score
+                free_creators.append(c_data)
+            elif i < FREE_CREATOR_LIMIT + LOCKED_SHOW:
+                c_data["locked"] = True
+                c_data["combined_score"] = 0
+                c_data["audience_fit_score"] = 0
+                c_data["content_proof_score"] = 0
+                locked_creators.append(c_data)
+
+        session.close()
+        return {
+            "query": parsed.to_dict(),
+            "mode": "creators",
+            "total_results": total,
+            "free_results": free_creators,
+            "locked_results": locked_creators,
+            "upgrade_message": f"{total - FREE_CREATOR_LIMIT} more creators available. Unlock full creator intelligence.",
+        }

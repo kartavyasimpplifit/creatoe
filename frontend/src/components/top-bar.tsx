@@ -9,40 +9,35 @@ export function TopBar({ state, stats, onReset }: {
   onReset: () => void;
 }) {
   return (
-    <header className="sticky top-0 z-50 bg-[#06060a]/90 backdrop-blur-xl border-b border-zinc-800/50">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 h-12 flex items-center justify-between">
-        <button onClick={onReset} className="flex items-center gap-2 group">
-          <div className="w-6 h-6 rounded-md bg-indigo-500/20 flex items-center justify-center">
-            <div className="w-2.5 h-2.5 rounded-sm bg-indigo-500" />
+    <header className="sticky top-0 z-50 glass border-b border-[var(--border)]/50">
+      <div className="max-w-[1440px] mx-auto px-5 sm:px-8 h-12 flex items-center justify-between">
+        <button onClick={onReset} className="flex items-center gap-2.5 group">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--accent)] to-purple-500 flex items-center justify-center shadow-[0_0_12px_rgba(129,140,248,0.2)]">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
           </div>
           <span className="text-sm font-bold tracking-tight">
-            <span className="text-white group-hover:text-indigo-300 transition-colors">Creator</span>
-            <span className="text-indigo-400">Lens</span>
+            <span className="text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">Creator</span>
+            <span className="text-[var(--accent)]">Lens</span>
           </span>
         </button>
 
-        <div className="flex items-center gap-4">
-          {stats && (
-            <div className="hidden sm:flex items-center gap-1.5 text-[10px] text-zinc-500">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>{formatNumber(stats.phone_creators)} phone creators</span>
-              <span className="text-zinc-700">·</span>
-              <span>{formatNumber(stats.analyzed_videos)} videos analyzed</span>
-            </div>
-          )}
-          <a
-            href="/integrations"
-            className="text-xs text-zinc-500 hover:text-indigo-400 transition-colors px-2 py-1 rounded-md hover:bg-zinc-800/50"
-          >
+        <nav className="hidden sm:flex items-center gap-1">
+          <button onClick={onReset} className="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)] transition-all">
+            Search
+          </button>
+          <a href="/integrations" className="px-3 py-1.5 rounded-lg text-xs font-medium text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--bg-card)] transition-all">
             Integrations
           </a>
-          {state === "results" && (
-            <button
-              onClick={onReset}
-              className="text-xs text-zinc-400 hover:text-white transition-colors px-2 py-1 rounded-md hover:bg-zinc-800"
-            >
-              New Search
-            </button>
+        </nav>
+
+        <div className="flex items-center gap-4">
+          {stats && (
+            <div className="hidden md:flex items-center gap-1.5 text-[10px] text-[var(--text-dim)]">
+              <div className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse-glow" />
+              <span>{formatNumber(stats.phone_creators)} creators</span>
+              <span className="text-[var(--border)]">/</span>
+              <span>{formatNumber(stats.analyzed_videos)} videos</span>
+            </div>
           )}
         </div>
       </div>

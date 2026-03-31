@@ -3,163 +3,139 @@
 import type { CreatorMatch } from "@/lib/api";
 import { formatNumber, formatINR } from "@/lib/api";
 
-const TIER_COLORS: Record<string, string> = {
-  mega: "text-purple-400 bg-purple-400/10 border-purple-400/20",
-  macro: "text-blue-400 bg-blue-400/10 border-blue-400/20",
-  mid: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
-  micro: "text-amber-400 bg-amber-400/10 border-amber-400/20",
-  nano: "text-zinc-400 bg-zinc-400/10 border-zinc-400/20",
+const TIER_STYLES: Record<string, string> = {
+  mega: "text-purple-300 bg-purple-500/10 border-purple-500/20",
+  macro: "text-blue-300 bg-blue-500/10 border-blue-500/20",
+  mid: "text-emerald-300 bg-emerald-500/10 border-emerald-500/20",
+  micro: "text-amber-300 bg-amber-500/10 border-amber-500/20",
+  nano: "text-stone-400 bg-stone-500/10 border-stone-500/20",
 };
 
-const MIX_BADGES: Record<string, { label: string; color: string }> = {
-  hybrid: { label: "Hybrid", color: "text-emerald-400 bg-emerald-400/10" },
-  longform: { label: "Long-form", color: "text-blue-400 bg-blue-400/10" },
-  shorts_only: { label: "Shorts Only", color: "text-amber-400 bg-amber-400/10" },
-  balanced: { label: "Balanced", color: "text-zinc-400 bg-zinc-800" },
+const MIX_LABELS: Record<string, { label: string; color: string }> = {
+  hybrid: { label: "Hybrid", color: "text-emerald-300 bg-emerald-500/8" },
+  longform: { label: "Long-form", color: "text-blue-300 bg-blue-500/8" },
+  shorts_only: { label: "Shorts", color: "text-amber-300 bg-amber-500/8" },
+  balanced: { label: "Mixed", color: "text-stone-400 bg-stone-500/8" },
 };
 
-function ScorePill({ score }: { score: number }) {
-  const color = score >= 65 ? "text-emerald-400 bg-emerald-400/10 border-emerald-400/20"
-    : score >= 45 ? "text-amber-400 bg-amber-400/10 border-amber-400/20"
-    : "text-zinc-400 bg-zinc-800 border-zinc-700";
-
+function DimensionBar({ label, score }: { label: string; score: number }) {
+  const color = score >= 60 ? "from-emerald-500 to-emerald-400" : score >= 35 ? "from-amber-500 to-amber-400" : "from-stone-600 to-stone-500";
   return (
-    <div className={`px-2 py-0.5 rounded-md text-xs font-bold font-mono border ${color}`}>
-      {score.toFixed(0)}
+    <div className="flex-1">
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[8px] text-[var(--text-dim)] uppercase tracking-wider font-medium">{label}</span>
+        <span className="text-[9px] font-[family-name:var(--font-mono)] text-[var(--text-muted)] font-semibold">{score.toFixed(0)}</span>
+      </div>
+      <div className="h-1.5 bg-[var(--bg)] rounded-full overflow-hidden">
+        <div className={`h-full rounded-full bg-gradient-to-r ${color} animate-bar`} style={{ width: `${score}%` }} />
+      </div>
     </div>
   );
 }
 
-function CreatorCard({ creator, onSelect, isInCampaign, onToggleCampaign, productBrand }: {
+function CreatorCard({ creator, onSelect, isInCampaign, onToggleCampaign, productBrand, index }: {
   creator: CreatorMatch;
   onSelect: (id: number) => void;
   isInCampaign: boolean;
   onToggleCampaign: (id: number) => void;
   productBrand: string;
+  index: number;
 }) {
   const c = creator.creator;
-  const mix = MIX_BADGES[creator.format_mix] || MIX_BADGES.balanced;
-  const hasEvidence = creator.brand_evidence.length > 0;
+  const mix = MIX_LABELS[creator.format_mix] || MIX_LABELS.balanced;
+  const isTop3 = creator.rank <= 3;
 
   return (
     <div
-      className={`group bg-zinc-900/60 border rounded-xl p-4 cursor-pointer transition-all duration-200 hover:bg-zinc-900 ${
-        creator.rank <= 3
-          ? "border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.08)]"
-          : isInCampaign
-            ? "border-indigo-500/50 ring-1 ring-indigo-500/20"
-            : "border-zinc-800 hover:border-zinc-700"
+      className={`bg-[var(--bg-card)] border rounded-2xl p-5 cursor-pointer card-hover animate-fade-in ${
+        isTop3 ? "glow-border" : isInCampaign ? "border-[var(--accent)]/50" : "border-[var(--border)]"
       }`}
+      style={{ animationDelay: `${Math.min(index * 40, 400)}ms` }}
       onClick={() => onSelect(c.id)}
     >
-      {/* Rank + Score row */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Rank + Score + Campaign */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <div className={`w-6 h-6 rounded-md flex items-center justify-center text-[10px] font-bold ${
-            creator.rank <= 3 ? "bg-indigo-500 text-white" : "bg-zinc-800 text-zinc-400"
+          <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-extrabold ${
+            isTop3 ? "bg-gradient-to-br from-[var(--accent)] to-purple-500 text-white shadow-[0_0_12px_rgba(129,140,248,0.25)]" : "bg-[var(--bg-elevated)] text-[var(--text-dim)] border border-[var(--border)]"
           }`}>
             {creator.rank}
           </div>
-          <ScorePill score={creator.match_score} />
+          <div className={`px-2.5 py-1 rounded-lg text-xs font-bold font-[family-name:var(--font-mono)] border ${
+            creator.match_score >= 65 ? "text-emerald-300 bg-emerald-500/10 border-emerald-500/20"
+            : creator.match_score >= 45 ? "text-amber-300 bg-amber-500/10 border-amber-500/20"
+            : "text-stone-400 bg-stone-500/10 border-stone-500/20"
+          }`}>
+            {creator.match_score.toFixed(0)}
+          </div>
         </div>
         <button
           onClick={e => { e.stopPropagation(); onToggleCampaign(c.id); }}
-          className={`text-[10px] px-2.5 py-1 rounded-lg font-medium transition-all ${
-            isInCampaign
-              ? "bg-indigo-500 text-white"
-              : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white"
-          }`}
-        >
+          className={`text-[10px] px-3 py-1.5 rounded-lg font-semibold transition-all ${
+            isInCampaign ? "bg-[var(--accent)] text-white shadow-[0_0_8px_rgba(129,140,248,0.3)]" : "bg-[var(--bg-elevated)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
+          }`}>
           {isInCampaign ? "✓ Added" : "+ Campaign"}
         </button>
       </div>
 
       {/* Creator info */}
-      <div className="flex items-center gap-3 mb-3">
+      <div className="flex items-center gap-3 mb-4">
         <img
-          src={c.thumbnail_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=6366f1&color=fff&size=40`}
+          src={c.thumbnail_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=44403c&color=e7e5e4&size=44`}
           alt={c.name}
-          className="w-10 h-10 rounded-full object-cover bg-zinc-800"
-          onError={e => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=6366f1&color=fff&size=40`; }}
+          className="w-11 h-11 rounded-full object-cover bg-[var(--bg-elevated)] ring-2 ring-[var(--border)]"
+          onError={e => { (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name)}&background=44403c&color=e7e5e4&size=44`; }}
         />
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-white truncate group-hover:text-indigo-300 transition-colors">
-            {c.name}
-          </div>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <span className="text-[11px] text-zinc-500">{formatNumber(c.subscriber_count)}</span>
-            <span className={`text-[9px] font-semibold px-1.5 py-0.5 rounded border ${TIER_COLORS[c.tier] || TIER_COLORS.nano}`}>
-              {c.tier}
-            </span>
-            <span className={`text-[9px] px-1.5 py-0.5 rounded ${mix.color}`}>{mix.label}</span>
+          <div className="text-[13px] font-semibold text-[var(--text)] truncate">{c.name}</div>
+          <div className="flex items-center gap-1.5 mt-1">
+            <span className="text-[11px] text-[var(--text-muted)]">{formatNumber(c.subscriber_count)}</span>
+            <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md border ${TIER_STYLES[c.tier] || TIER_STYLES.nano}`}>{c.tier}</span>
+            <span className={`text-[9px] px-1.5 py-0.5 rounded-md font-medium ${mix.color}`}>{mix.label}</span>
           </div>
         </div>
       </div>
 
-      {/* Score dimensions mini */}
-      <div className="flex gap-1 mb-3">
+      {/* Score dimensions */}
+      <div className="flex gap-2 mb-4">
         {Object.entries(creator.dimensions).map(([key, dim]) => {
           const label = key === "brand_price_fit" ? "Brand" : key === "feature_relevance" ? "Feature" : "Quality";
-          const w = (dim.score / 100) * 100;
-          return (
-            <div key={key} className="flex-1">
-              <div className="flex items-center justify-between mb-0.5">
-                <span className="text-[8px] text-zinc-600 uppercase">{label}</span>
-                <span className="text-[9px] font-mono text-zinc-500">{dim.score.toFixed(0)}</span>
-              </div>
-              <div className="h-1 bg-zinc-800 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full ${dim.score >= 60 ? "bg-emerald-500" : dim.score >= 35 ? "bg-amber-500" : "bg-zinc-600"}`}
-                  style={{ width: `${w}%` }}
-                />
-              </div>
-            </div>
-          );
+          return <DimensionBar key={key} label={label} score={dim.score} />;
         })}
       </div>
 
       {/* Brand evidence */}
-      {hasEvidence && (
-        <div className="bg-indigo-500/5 border border-indigo-500/10 rounded-lg px-2.5 py-1.5 mb-3">
-          <div className="text-[10px] text-indigo-300">
+      {creator.brand_evidence.length > 0 && (
+        <div className="bg-[var(--accent-dim)] border border-[var(--accent)]/10 rounded-xl px-3 py-2 mb-3">
+          <div className="text-[10px] text-[var(--accent)] font-medium">
             ✓ {creator.brand_evidence.length} {productBrand} video{creator.brand_evidence.length > 1 ? "s" : ""} — top: {formatNumber(creator.brand_evidence[0].views)} views
           </div>
         </div>
       )}
 
-      {/* Why statement */}
-      <div className="text-[11px] text-zinc-500 leading-relaxed line-clamp-2 mb-3">
+      {/* Why + concerns */}
+      <div className="text-[11px] text-[var(--text-muted)] leading-relaxed line-clamp-2 mb-3">
         {creator.match_reasons.slice(0, 2).join(" · ")}
       </div>
-
-      {/* Concerns */}
-      {creator.concerns.length > 0 && (
-        <div className="text-[10px] text-amber-400/70 mb-3">
-          ⚠ {creator.concerns[0]}
-        </div>
-      )}
-
-      {/* Fraud flags */}
       {creator.fraud_flags.length > 0 && (
-        <div className="text-[10px] text-red-400/70 mb-3">
-          🚩 {creator.fraud_flags[0]}
-        </div>
+        <div className="text-[10px] text-[var(--danger)]/80 mb-2">🚩 {creator.fraud_flags[0]}</div>
+      )}
+      {creator.concerns.length > 0 && (
+        <div className="text-[10px] text-[var(--warning)]/80 mb-2">⚠ {creator.concerns[0]}</div>
       )}
 
       {/* Bottom stats */}
-      <div className="flex items-center gap-3 pt-3 border-t border-zinc-800/50">
+      <div className="flex items-center gap-3 pt-3 border-t border-[var(--border)]/50 text-[var(--text-dim)]">
         <div className="flex items-center gap-1">
-          <span className="text-[9px] text-zinc-600">Views:</span>
-          <span className="text-[11px] font-mono text-zinc-400">{formatNumber(creator.predicted_views)}</span>
+          <span className="text-[9px]">Views:</span>
+          <span className="text-[11px] font-[family-name:var(--font-mono)] text-[var(--text-muted)]">{formatNumber(creator.predicted_views)}</span>
         </div>
         <div className="flex items-center gap-1">
-          <span className="text-[9px] text-zinc-600">CPV:</span>
-          <span className="text-[11px] font-mono text-zinc-400">₹{creator.predicted_cpv.toFixed(2)}</span>
+          <span className="text-[9px]">CPV:</span>
+          <span className="text-[11px] font-[family-name:var(--font-mono)] text-[var(--text-muted)]">₹{creator.predicted_cpv.toFixed(2)}</span>
         </div>
         <div className="flex-1" />
-        <span className="text-[10px] px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-500">
-          {c.primary_language}
-        </span>
+        <span className="text-[10px] px-2 py-0.5 rounded-md bg-[var(--bg-elevated)] text-[var(--text-dim)] capitalize">{c.primary_language}</span>
       </div>
     </div>
   );
@@ -172,25 +148,14 @@ export function CreatorGrid({ creators, onSelect, campaignIds, onToggleCampaign,
   onToggleCampaign: (id: number) => void;
   productBrand: string;
 }) {
-  if (creators.length === 0) {
-    return (
-      <div className="text-center py-20 text-zinc-500 text-sm">
-        No creators match these filters. Try adjusting your selection.
-      </div>
-    );
+  if (!creators.length) {
+    return <div className="text-center py-20 text-[var(--text-dim)] text-sm">No creators match. Try adjusting filters.</div>;
   }
-
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-      {creators.map(c => (
-        <CreatorCard
-          key={c.creator.id}
-          creator={c}
-          onSelect={onSelect}
-          isInCampaign={campaignIds.includes(c.creator.id)}
-          onToggleCampaign={onToggleCampaign}
-          productBrand={productBrand}
-        />
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      {creators.map((c, i) => (
+        <CreatorCard key={c.creator.id} creator={c} onSelect={onSelect} index={i}
+          isInCampaign={campaignIds.includes(c.creator.id)} onToggleCampaign={onToggleCampaign} productBrand={productBrand} />
       ))}
     </div>
   );

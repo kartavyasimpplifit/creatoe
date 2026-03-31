@@ -91,17 +91,16 @@ const INTEGRATIONS = [
 
 export default function IntegrationsPage() {
   return (
-    <div className="min-h-screen bg-[#06060a]">
-      {/* Header */}
-      <header className="border-b border-zinc-800/50">
+    <div className="min-h-screen noise">
+      <header className="border-b border-[var(--border)]/50 glass sticky top-0 z-50">
         <div className="max-w-[1200px] mx-auto px-6 h-12 flex items-center">
-          <a href="/" className="flex items-center gap-2 group">
-            <div className="w-6 h-6 rounded-md bg-indigo-500/20 flex items-center justify-center">
-              <div className="w-2.5 h-2.5 rounded-sm bg-indigo-500" />
+          <a href="/" className="flex items-center gap-2.5 group">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--accent)] to-purple-500 flex items-center justify-center shadow-[0_0_12px_rgba(129,140,248,0.2)]">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
             </div>
-            <span className="text-sm font-bold">
-              <span className="text-white">Creator</span>
-              <span className="text-indigo-400">Lens</span>
+            <span className="text-sm font-bold tracking-tight">
+              <span className="text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">Creator</span>
+              <span className="text-[var(--accent)]">Lens</span>
             </span>
           </a>
         </div>
