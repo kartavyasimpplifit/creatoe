@@ -12,15 +12,19 @@ alwaysApply: true
 - **Vercel Project:** kartavya-atris-projects/frontend
 - **Backend runs locally** at http://localhost:8000, tunneled via Cloudflare
 
-## Git + Deploy Commands (PATH setup required)
+## Git + Deploy Commands (PATH setup required every session)
 
 ```powershell
 $env:PATH = "C:\Program Files\GitHub CLI;" + "C:\Program Files\Git\cmd;" + $env:PATH
+$env:GH_TOKEN = (gh auth token 2>$null)
+cd "c:\Graph Ai"
+git remote set-url origin "https://x-access-token:$env:GH_TOKEN@github.com/kartavyasimpplifit/creatoe.git"
 ```
 
 ## After ANY code change
 
 1. Commit to the unified repo: `cd "c:\Graph Ai"; git add -A; git commit -m "msg"; git push origin master`
+   NOTE: If push hangs, use token-based URL: `git remote set-url origin "https://x-access-token:$(gh auth token)@github.com/kartavyasimpplifit/creatoe.git"`
 2. If frontend changed: `cd frontend; npx vercel --yes --prod`
 3. If backend changed: restart uvicorn + restart tunnel
 
