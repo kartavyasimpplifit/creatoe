@@ -1,5 +1,6 @@
 "use client";
 
+import { Check, ArrowLeft } from "lucide-react";
 import { CreatoeLogoInline } from "@/components/creatoe-logo";
 
 const PLANS = [
@@ -70,9 +71,12 @@ const PLANS = [
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[var(--bg)]">
       <header className="border-b border-[var(--border)] glass sticky top-0 z-50">
-        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center">
+        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center gap-4">
+          <a href="/" className="flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
+            <ArrowLeft size={14} />
+          </a>
           <a href="/"><CreatoeLogoInline /></a>
         </div>
       </header>
@@ -80,7 +84,7 @@ export default function PricingPage() {
       <div className="max-w-5xl mx-auto px-6 py-16">
         <div className="text-center mb-14">
           <h1 className="text-3xl font-extrabold text-[var(--text)] tracking-tight mb-3">Simple, usage-based pricing</h1>
-          <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
+          <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto leading-relaxed">
             Start free. Upgrade when you need more. Pay-as-you-go add-ons for premium features.
           </p>
           <div className="mt-3 text-[11px] text-[var(--text-muted)]">
@@ -91,15 +95,17 @@ export default function PricingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {PLANS.map(plan => (
             <div key={plan.name}
-              className={`bg-[var(--bg-card)] border rounded-2xl p-6 flex flex-col ${
-                plan.highlighted ? "border-[var(--accent)]/40 shadow-[0_0_30px_rgba(129,140,248,0.08)]" : "border-[var(--border)]"
+              className={`bg-[var(--bg-card)] border rounded-2xl p-6 flex flex-col transition-all duration-200 ${
+                plan.highlighted
+                  ? "border-[var(--accent)]/30 shadow-[0_0_40px_rgba(129,140,248,0.06)]"
+                  : "border-[var(--border)] hover:border-[var(--border-light)]"
               }`}>
               {plan.highlighted && (
-                <div className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-[0.15em] mb-2">Most Popular</div>
+                <div className="text-[10px] font-bold text-[var(--accent)] uppercase tracking-[0.2em] mb-2">Most Popular</div>
               )}
               <div className="text-lg font-bold text-[var(--text)]">{plan.name}</div>
               <div className="flex items-baseline gap-1 mt-1 mb-1">
-                <span className="text-2xl font-extrabold text-[var(--text)] font-[family-name:var(--font-mono)]">{plan.price}</span>
+                <span className="text-2xl font-extrabold text-[var(--text)]" style={{ fontFamily: "var(--font-mono)" }}>{plan.price}</span>
                 {plan.period && <span className="text-sm text-[var(--text-muted)]">{plan.period}</span>}
               </div>
               <div className="text-xs text-[var(--text-muted)] mb-5">{plan.description}</div>
@@ -107,7 +113,7 @@ export default function PricingPage() {
               <ul className="flex-1 space-y-2.5 mb-6">
                 {plan.features.map(f => (
                   <li key={f} className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--green)" strokeWidth="2.5" className="flex-shrink-0 mt-0.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    <Check size={14} className="text-[var(--success)] flex-shrink-0 mt-0.5" />
                     {f}
                   </li>
                 ))}
@@ -115,19 +121,19 @@ export default function PricingPage() {
 
               {plan.addons && (
                 <div className="mb-5 pt-4 border-t border-[var(--border)]">
-                  <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.12em] mb-2">Pay-per-use Add-ons</div>
+                  <div className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.15em] mb-2">Pay-per-use Add-ons</div>
                   {plan.addons.map(a => (
                     <div key={a.name} className="flex justify-between text-[11px] text-[var(--text-muted)] py-1">
                       <span>{a.name}</span>
-                      <span className="font-[family-name:var(--font-mono)] text-[var(--text-secondary)]">{a.price}</span>
+                      <span className="text-[var(--text-secondary)]" style={{ fontFamily: "var(--font-mono)" }}>{a.price}</span>
                     </div>
                   ))}
                 </div>
               )}
 
-              <button className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all ${
+              <button className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 plan.highlighted
-                  ? "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] shadow-lg shadow-[var(--accent)]/15"
+                  ? "bg-[var(--accent)] text-white hover:bg-[var(--accent-hover)] shadow-lg shadow-[var(--accent)]/10"
                   : "bg-[var(--bg-elevated)] text-[var(--text)] border border-[var(--border)] hover:bg-[var(--bg-card-hover)]"
               }`}>
                 {plan.cta}

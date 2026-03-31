@@ -15,6 +15,7 @@ import { CreatorPanel } from "@/components/creator-panel";
 import { CampaignBar } from "@/components/campaign-bar";
 import { CampaignModal } from "@/components/campaign-modal";
 import { VideoGrid } from "@/components/video-grid";
+import { Lock } from "lucide-react";
 
 type AppState = "idle" | "loading" | "product-results" | "search-results";
 type NavPage = "search" | "match" | "intel" | "integrations" | "pricing";
@@ -123,10 +124,10 @@ export default function Home() {
   }) || [];
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-[var(--bg)]">
       <Sidebar active={navPage} onNavigate={handleNav} credits={credits} />
 
-      <main className="flex-1 ml-[60px]">
+      <main className="flex-1 ml-[56px]">
         {state === "idle" && (
           <SearchHero onProductSearch={handleProductSearch} onAISearch={handleAISearch} stats={stats} />
         )}
@@ -136,7 +137,7 @@ export default function Home() {
         )}
 
         {state === "product-results" && data && (
-          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32">
+          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32 animate-fade-in">
             {/* Product + Demand Intel */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
               <ProductCard product={data.product} totalMatched={data.total_matched} totalDisqualified={data.total_disqualified} />
@@ -147,30 +148,38 @@ export default function Home() {
 
             {/* Filters */}
             <div className="flex flex-wrap items-center gap-2 mb-6">
-              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.15em] font-semibold mr-1">Tier</span>
+              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-semibold mr-1">Tier</span>
               {["", "mega", "macro", "mid", "micro"].map(t => (
                 <button key={t} onClick={() => setFilters(f => ({ ...f, tier: t }))}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    filters.tier === t ? "bg-[var(--accent)] text-white" : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                    filters.tier === t
+                      ? "bg-[var(--accent)] text-white"
+                      : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
                   }`}>
                   {t || "All"}
                 </button>
               ))}
-              <div className="w-px h-5 bg-[var(--border)] mx-1" />
-              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.15em] font-semibold mr-1">Lang</span>
+
+              <div className="w-px h-5 bg-[var(--border)] mx-2" />
+
+              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-semibold mr-1">Lang</span>
               {data.demand_intelligence.language_coverage && Object.entries(data.demand_intelligence.language_coverage)
                 .sort(([, a], [, b]) => b - a).slice(0, 5)
                 .map(([lang, count]) => (
                   <button key={lang} onClick={() => setFilters(f => ({ ...f, language: f.language === lang ? "" : lang }))}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
-                      filters.language === lang ? "bg-[var(--accent)] text-white" : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
+                      filters.language === lang
+                        ? "bg-[var(--accent)] text-white"
+                        : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
                     }`}>
                     {lang.charAt(0).toUpperCase() + lang.slice(1)} <span className="opacity-50 ml-0.5">{count}</span>
                   </button>
                 ))}
+
               <div className="flex-1" />
+
               <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value }))}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-full px-4 py-1.5 text-xs text-[var(--text)] outline-none">
+                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-full px-4 py-1.5 text-xs text-[var(--text)] outline-none appearance-none cursor-pointer">
                 <option value="match_score">Best Match</option>
                 <option value="subscribers">Subscribers</option>
                 <option value="engagement">Engagement</option>
@@ -184,7 +193,7 @@ export default function Home() {
         )}
 
         {state === "search-results" && searchData && (
-          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32">
+          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32 animate-fade-in">
             <div className="mb-6">
               <div className="text-xs text-[var(--text-muted)] mb-1">Results for</div>
               <div className="text-lg font-bold text-[var(--text)]">&ldquo;{searchData.query.raw_query as string}&rdquo;</div>
@@ -200,11 +209,11 @@ export default function Home() {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {searchData.free_results.map((c, i) => (
                   <div key={(c.id as number) || i}
-                    className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 hover-lift cursor-pointer fade-in"
+                    className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 card-hover cursor-pointer animate-fade-in"
                     style={{ animationDelay: `${i * 50}ms` }}
                     onClick={() => { setSelectedCreator(c.id as number); useCredits(5); }}>
                     <div className="flex items-center gap-3 mb-3">
-                      <img src={(c.thumbnail_url as string) || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name as string)}&background=818cf8&color=fff&size=40`}
+                      <img src={(c.thumbnail_url as string) || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name as string)}&background=222&color=fff&size=40`}
                         className="w-10 h-10 rounded-full object-cover bg-[var(--bg-elevated)]" alt="" />
                       <div className="flex-1 min-w-0">
                         <div className="text-sm font-semibold text-[var(--text)] truncate">{c.name as string}</div>
@@ -215,7 +224,7 @@ export default function Home() {
                   </div>
                 ))}
                 {searchData.locked_results.map((c, i) => (
-                  <div key={`l-${i}`} className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 overflow-hidden fade-in" style={{ animationDelay: `${(searchData.free_results.length + i) * 50}ms` }}>
+                  <div key={`l-${i}`} className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 overflow-hidden animate-fade-in" style={{ animationDelay: `${(searchData.free_results.length + i) * 50}ms` }}>
                     <div className="blur-[6px] pointer-events-none">
                       <div className="flex items-center gap-3 mb-3">
                         <div className="w-10 h-10 rounded-full bg-[var(--bg-elevated)]" />
@@ -224,7 +233,7 @@ export default function Home() {
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        <Lock size={14} className="text-[var(--text-muted)]" />
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,8 @@
 "use client";
 
+import { ArrowLeft, Check, Clock, Plug } from "lucide-react";
+import { CreatoeLogoInline } from "@/components/creatoe-logo";
+
 const INTEGRATIONS = [
   {
     category: "Your Platforms",
@@ -8,22 +11,19 @@ const INTEGRATIONS = [
         name: "Flipkart Commerce Cloud",
         description: "Product catalog, real-time pricing, ad performance comparison",
         unlock: "Real product prices, bestseller data, FCC Ads CPV comparison",
-        logo: "🛒",
-        status: "available",
+        status: "available" as const,
       },
       {
         name: "Flipkart Affiliate",
         description: "Conversion tracking, actual sales attribution per creator",
         unlock: "True ROAS: actual orders and GMV per creator",
-        logo: "📊",
-        status: "available",
+        status: "available" as const,
       },
       {
         name: "Qoruz Creator Database",
         description: "Import your existing 15K+ creator list for health audit",
         unlock: "Audit all creators: active, declining, or inactive",
-        logo: "👥",
-        status: "available",
+        status: "available" as const,
       },
     ],
   },
@@ -34,22 +34,19 @@ const INTEGRATIONS = [
         name: "Phyllo",
         description: "Instagram & TikTok audience demographics, cross-platform data",
         unlock: "Real audience age, gender, location per creator + Instagram reach",
-        logo: "📸",
-        status: "available",
+        status: "available" as const,
       },
       {
         name: "Modash",
         description: "350M+ creator database enrichment across platforms",
         unlock: "Expand beyond YouTube to Instagram, TikTok globally",
-        logo: "🌐",
-        status: "available",
+        status: "available" as const,
       },
       {
         name: "HypeAuditor",
         description: "Fake follower detection, audience quality scoring (87% accuracy)",
         unlock: "Fraud detection with 87% accuracy on follower authenticity",
-        logo: "🛡️",
-        status: "available",
+        status: "available" as const,
       },
     ],
   },
@@ -60,116 +57,113 @@ const INTEGRATIONS = [
         name: "Google Workspace",
         description: "Export campaign plans to Google Sheets, auto-generate Slides",
         unlock: "One-click campaign export as formatted Google Sheet",
-        logo: "📋",
-        status: "functional",
+        status: "functional" as const,
       },
       {
         name: "Slack",
         description: "Real-time alerts for competitive moves, creator health changes",
         unlock: "Get notified when competitors activate creators",
-        logo: "💬",
-        status: "available",
+        status: "available" as const,
       },
       {
         name: "Google BigQuery",
         description: "Push scoring data to your data warehouse for custom analysis",
         unlock: "Your data team builds custom models on creator intelligence",
-        logo: "🗄️",
-        status: "available",
+        status: "available" as const,
       },
     ],
   },
   {
     category: "Coming Soon",
     items: [
-      { name: "Salesforce CRM", description: "Track creator relationships in your CRM", unlock: "", logo: "☁️", status: "soon" },
-      { name: "Sprinklr Social", description: "Unified social + creator reporting", unlock: "", logo: "📡", status: "soon" },
-      { name: "Amazon Advertising", description: "Amazon creator attribution and comparison", unlock: "", logo: "📦", status: "soon" },
+      { name: "Salesforce CRM", description: "Track creator relationships in your CRM", unlock: "", status: "soon" as const },
+      { name: "Sprinklr Social", description: "Unified social + creator reporting", unlock: "", status: "soon" as const },
+      { name: "Amazon Advertising", description: "Amazon creator attribution and comparison", unlock: "", status: "soon" as const },
     ],
   },
 ];
 
+function StatusButton({ status }: { status: "available" | "functional" | "soon" }) {
+  if (status === "functional") {
+    return (
+      <button className="w-full py-2 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center gap-1.5">
+        <Check size={12} /> Active
+      </button>
+    );
+  }
+  if (status === "soon") {
+    return (
+      <button disabled className="w-full py-2 rounded-lg text-xs font-semibold bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed flex items-center justify-center gap-1.5">
+        <Clock size={12} /> Coming Soon
+      </button>
+    );
+  }
+  return (
+    <button className="w-full py-2 rounded-lg text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] border border-[var(--border)] transition-all duration-200 flex items-center justify-center gap-1.5">
+      <Plug size={12} /> Connect
+    </button>
+  );
+}
+
 export default function IntegrationsPage() {
   return (
-    <div className="min-h-screen noise">
-      <header className="border-b border-[var(--border)]/50 glass sticky top-0 z-50">
-        <div className="max-w-[1200px] mx-auto px-6 h-12 flex items-center">
-          <a href="/" className="flex items-center gap-2.5 group">
-            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[var(--accent)] to-purple-500 flex items-center justify-center shadow-[0_0_12px_rgba(129,140,248,0.2)]">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-            </div>
-            <span className="text-sm font-bold tracking-tight">
-              <span className="text-[var(--text)] group-hover:text-[var(--accent)] transition-colors">Creator</span>
-              <span className="text-[var(--accent)]">Lens</span>
-            </span>
+    <div className="min-h-screen bg-[var(--bg)]">
+      <header className="border-b border-[var(--border)] glass sticky top-0 z-50">
+        <div className="max-w-[1200px] mx-auto px-6 h-12 flex items-center gap-4">
+          <a href="/" className="flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
+            <ArrowLeft size={14} />
           </a>
+          <a href="/"><CreatoeLogoInline /></a>
         </div>
       </header>
 
       <div className="max-w-[1200px] mx-auto px-6 py-12">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-white mb-3">Integrations</h1>
-          <p className="text-sm text-zinc-500 max-w-lg mx-auto">
+          <h1 className="text-3xl font-bold text-[var(--text)] mb-3">Integrations</h1>
+          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto leading-relaxed">
             Connect your existing tools to unlock deeper intelligence. Each integration adds a new dimension to your creator matching.
           </p>
         </div>
 
         {INTEGRATIONS.map((cat) => (
           <div key={cat.category} className="mb-10">
-            <h2 className="text-xs font-semibold text-zinc-500 uppercase tracking-widest mb-4">{cat.category}</h2>
+            <h2 className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-4">{cat.category}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {cat.items.map((item) => (
                 <div
                   key={item.name}
-                  className={`bg-zinc-900/60 border rounded-xl p-5 transition-all ${
+                  className={`bg-[var(--bg-card)] border rounded-xl p-5 transition-all duration-200 ${
                     item.status === "soon"
-                      ? "border-zinc-800/50 opacity-50"
-                      : "border-zinc-800 hover:border-zinc-700"
+                      ? "border-[var(--border)] opacity-50"
+                      : "border-[var(--border)] hover:border-[var(--border-light)]"
                   }`}
                 >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-xl flex-shrink-0">
-                      {item.logo}
-                    </div>
-                    <div className="flex-1">
-                      <div className="text-sm font-semibold text-white">{item.name}</div>
-                      <div className="text-[11px] text-zinc-500 mt-0.5 leading-relaxed">{item.description}</div>
-                    </div>
+                  <div className="mb-3">
+                    <div className="text-sm font-semibold text-[var(--text)] mb-1">{item.name}</div>
+                    <div className="text-[11px] text-[var(--text-muted)] leading-relaxed">{item.description}</div>
                   </div>
 
                   {item.unlock && (
-                    <div className="bg-indigo-500/5 border border-indigo-500/10 rounded-lg px-3 py-2 mb-3">
-                      <div className="text-[10px] text-indigo-300">
+                    <div className="bg-[var(--accent-dim)] border border-[var(--accent)]/10 rounded-lg px-3 py-2 mb-3">
+                      <div className="text-[10px] text-[var(--accent)]">
                         <span className="font-semibold">Unlocks:</span> {item.unlock}
                       </div>
                     </div>
                   )}
 
-                  <button
-                    className={`w-full py-2 rounded-lg text-xs font-semibold transition-all ${
-                      item.status === "functional"
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20"
-                        : item.status === "soon"
-                          ? "bg-zinc-800 text-zinc-600 cursor-not-allowed"
-                          : "bg-zinc-800 text-zinc-300 hover:bg-zinc-700 border border-zinc-700"
-                    }`}
-                    disabled={item.status === "soon"}
-                  >
-                    {item.status === "functional" ? "✓ Active" : item.status === "soon" ? "Coming Soon" : "Connect"}
-                  </button>
+                  <StatusButton status={item.status} />
                 </div>
               ))}
             </div>
           </div>
         ))}
 
-        {/* Enterprise CTA */}
-        <div className="mt-12 bg-indigo-500/5 border border-indigo-500/15 rounded-2xl p-8 text-center">
-          <h3 className="text-lg font-bold text-white mb-2">Need a custom integration?</h3>
-          <p className="text-sm text-zinc-400 mb-4 max-w-md mx-auto">
+        <div className="mt-12 bg-[var(--accent-dim)] border border-[var(--accent)]/15 rounded-2xl p-8 text-center">
+          <h3 className="text-lg font-bold text-[var(--text)] mb-2">Need a custom integration?</h3>
+          <p className="text-sm text-[var(--text-muted)] mb-4 max-w-md mx-auto leading-relaxed">
             We build custom connectors for enterprise platforms. Contact us to discuss your tech stack.
           </p>
-          <button className="px-6 py-2.5 bg-indigo-500 text-white text-sm font-semibold rounded-xl hover:bg-indigo-400 transition-colors">
+          <button className="px-6 py-2.5 bg-[var(--accent)] text-white text-sm font-semibold rounded-xl hover:bg-[var(--accent-hover)] transition-colors duration-200">
             Contact Enterprise Sales
           </button>
         </div>

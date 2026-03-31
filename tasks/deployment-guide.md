@@ -15,15 +15,25 @@
 - Platform: **Vercel** (free tier)
 - Env var needed: `NEXT_PUBLIC_API_URL=<render-backend-url>`
 
+## Tools Already Installed
+- **Vercel CLI:** v50.19.1 at `C:\Users\GRAM\AppData\Roaming\npm\vercel` (needs `vercel login` — token expired)
+- **GitHub CLI:** v2.89.0 (needs `gh auth login` — not authenticated)
+- **Git:** v2.53.0 configured with user `Kartavya Atri <kartavya@creatorlens.ai>`
+- **Node:** v24.13.1
+- **npm:** v11.8.0
+
 ## Step-by-Step Deployment
 
-### 1. Push to GitHub
+### 1. Authenticate (one-time, needs browser click from user)
 ```bash
-# Refresh PATH to find gh
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+gh auth login    # Opens browser for GitHub auth
+vercel login     # Opens browser for Vercel auth
+```
 
+### 2. Push to GitHub
+```bash
 cd "c:\Graph Ai"
-gh auth login  # Follow browser auth flow
 gh repo create creatoe --private --source=. --push
 ```
 

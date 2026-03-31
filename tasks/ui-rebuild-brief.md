@@ -124,6 +124,21 @@ After UI is done, deploy:
 - Needs GitHub repo first
 - Set NEXT_PUBLIC_API_URL env var in Vercel to point to Render backend URL
 
+### CRITICAL: Nothing Hardcoded
+- ALL data must come from the backend API at `http://localhost:8000`
+- Stats (creator count, video count) — from `GET /api/stats`
+- Creator results — from `POST /api/analyze` or `POST /api/search`
+- Creator detail — from `GET /api/creator/{id}`
+- Campaign data — from `POST /api/campaign/build`
+- NO hardcoded creator names, counts, scores, or any data
+- The demo MUST work with real, live backend data
+- If the backend is down, show proper error states — don't fake data
+
+### Deployment Tools Available
+- **Vercel CLI:** installed at `C:\Users\GRAM\AppData\Roaming\npm\vercel` (needs `vercel login`)
+- **GitHub CLI:** installed (needs `gh auth login`)
+- See `tasks/deployment-guide.md` for full deployment steps
+
 ### Testing Protocol
 Use subagents:
 1. UI Designer subagent validates visual design quality
