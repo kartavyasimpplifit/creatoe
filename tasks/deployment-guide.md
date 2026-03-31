@@ -1,5 +1,16 @@
 # Deployment Guide for Creatoe
 
+## CURRENTLY LIVE (Cloudflare Tunnels)
+
+**Frontend:** https://enforcement-college-survivor-charles.trycloudflare.com
+**Backend API:** https://eva-compensation-equipped-billion.trycloudflare.com
+
+These are Cloudflare Quick Tunnels — free, no account needed, tunneling from localhost.
+URLs change if tunnels restart. For permanent URLs, deploy to Vercel + Render.
+
+Frontend `.env.local` is set to use the backend tunnel URL.
+CORS is set to `*` — works with any origin.
+
 ## What Needs to Deploy
 
 ### Backend (Python FastAPI)

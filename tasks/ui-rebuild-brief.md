@@ -134,9 +134,17 @@ After UI is done, deploy:
 - The demo MUST work with real, live backend data
 - If the backend is down, show proper error states — don't fake data
 
-### Deployment Tools Available
-- **Vercel CLI:** installed at `C:\Users\GRAM\AppData\Roaming\npm\vercel` (needs `vercel login`)
+### LIVE DEPLOYMENT (Cloudflare Tunnels — running NOW)
+- **Frontend:** https://enforcement-college-survivor-charles.trycloudflare.com
+- **Backend API:** https://eva-compensation-equipped-billion.trycloudflare.com
+- Frontend `.env.local` already points to the backend tunnel URL
+- The UI rebuild chat should update frontend code, and the tunnel auto-serves the latest
+- If tunnels die, restart with: `cloudflared tunnel --url http://localhost:8000` and `cloudflared tunnel --url http://localhost:3000`
+
+### Additional Deployment Tools Available
+- **Vercel CLI:** installed (needs `vercel login` for permanent URL)
 - **GitHub CLI:** installed (needs `gh auth login`)
+- **cloudflared:** installed and working
 - See `tasks/deployment-guide.md` for full deployment steps
 
 ### Testing Protocol

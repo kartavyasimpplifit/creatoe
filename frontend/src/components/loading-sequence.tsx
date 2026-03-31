@@ -50,8 +50,8 @@ export function LoadingSequence({ step, url, product }: {
         )}
 
         {step === -1 ? (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center">
-            <div className="text-red-400 text-sm font-semibold mb-2">Analysis failed</div>
+          <div className="bg-[var(--danger)]/10 border border-[var(--danger)]/20 rounded-xl p-6 text-center">
+            <div className="text-[var(--danger)] text-sm font-semibold mb-2">Analysis failed</div>
             <div className="text-xs text-[var(--text-muted)]">Check the URL and try again.</div>
           </div>
         ) : (

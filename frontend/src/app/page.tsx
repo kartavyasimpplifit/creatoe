@@ -59,6 +59,7 @@ export default function Home() {
       setTimeout(() => setState("product-results"), 600);
     } catch {
       setLoadingStep(-1);
+      setTimeout(() => setState("idle"), 3000);
     }
   }, []);
 
@@ -74,6 +75,7 @@ export default function Home() {
       setTimeout(() => setState("search-results"), 300);
     } catch {
       setLoadingStep(-1);
+      setTimeout(() => setState("idle"), 3000);
     }
   }, []);
 
@@ -83,10 +85,14 @@ export default function Home() {
 
   const handleViewCampaign = useCallback(async () => {
     if (campaignIds.length < 1) return;
-    useCredits(25);
-    const campaign = await buildCampaign(campaignIds, productUrl);
-    setCampaignData(campaign);
-    setShowCampaign(true);
+    try {
+      useCredits(25);
+      const campaign = await buildCampaign(campaignIds, productUrl);
+      setCampaignData(campaign);
+      setShowCampaign(true);
+    } catch {
+      console.error("Campaign build failed");
+    }
   }, [campaignIds, productUrl]);
 
   const handleReset = () => {
