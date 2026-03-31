@@ -432,6 +432,30 @@ def score_creator_for_product(creator: Creator, product: ProductData, session=No
     all_reasons = d1["reasons"] + d2["reasons"] + d3["reasons"]
     all_concerns = d2.get("concerns", []) + d3.get("concerns", [])
 
+    fk_vids = [v for v in all_videos if v.analysis and "flipkart" in v.analysis.get("marketplace_links", [])]
+    amz_vids = [v for v in all_videos if v.analysis and "amazon" in v.analysis.get("marketplace_links", [])]
+    marketplace = {
+        "flipkart_videos": len(fk_vids),
+        "amazon_videos": len(amz_vids),
+        "primary": "flipkart" if len(fk_vids) > len(amz_vids) else "amazon" if len(amz_vids) > len(fk_vids) else "none",
+        "last_flipkart": max((v.published_at for v in fk_vids if v.published_at), default=""),
+        "last_amazon": max((v.published_at for v in amz_vids if v.published_at), default=""),
+    }
+    marketplace_timeline = []
+    for v in sorted(all_videos, key=lambda x: x.published_at or "", reverse=True)[:20]:
+        if v.analysis:
+            mlinks = v.analysis.get("marketplace_links", [])
+            brands = [p.get("brand", "") for p in v.analysis.get("products_mentioned", [])]
+            if mlinks:
+                marketplace_timeline.append({
+                    "date": v.published_at or "",
+                    "title": v.title[:60],
+                    "marketplace": mlinks,
+                    "brands": brands[:3],
+                    "views": v.view_count,
+                    "video_id": v.video_id,
+                })
+
     if close_session:
         session.close()
 
@@ -453,6 +477,8 @@ def score_creator_for_product(creator: Creator, product: ProductData, session=No
         "format_mix": format_mix,
         "phone_video_count": len(phone_videos),
         "last_phone_date": max((v.published_at for v in phone_videos if v.published_at), default=""),
+        "marketplace": marketplace,
+        "marketplace_timeline": marketplace_timeline[:5],
     }
 
 
