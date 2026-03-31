@@ -603,57 +603,77 @@ def ai_search(req: SearchRequest):
     session = SessionLocal()
     FREE_CREATOR_LIMIT = 8
     FREE_VIDEO_LIMIT = 4
-    LOCKED_SHOW = 4
+    LOCKED_SHOW = 8
 
     if parsed.mode == "videos":
-        query = session.query(Video).filter(Video.is_analyzed == True)
+        all_videos = session.query(Video).filter(Video.is_analyzed == True).all()
+        matched = []
 
-        if parsed.brands:
-            brand_vids = []
-            for v in query.all():
-                if v.analysis:
-                    for p in v.analysis.get("products_mentioned", []):
-                        if p.get("brand", "") in parsed.brands:
-                            brand_vids.append(v.id)
-                            break
-            if brand_vids:
-                query = session.query(Video).filter(Video.id.in_(brand_vids))
+        for v in all_videos:
+            score = 0
+            analysis = v.analysis or {}
 
-        if parsed.format_type:
-            fmt_vids = []
-            for v in query.all():
-                if v.analysis and v.analysis.get("format") == parsed.format_type:
-                    fmt_vids.append(v.id)
-            if fmt_vids:
-                query = session.query(Video).filter(Video.id.in_(fmt_vids))
+            is_phone = analysis.get("is_phone_related_strict", analysis.get("is_phone_related", False))
+            if not is_phone:
+                continue
 
-        if parsed.language:
-            lang_vids = []
-            for v in query.all():
-                if v.analysis and v.analysis.get("language") == parsed.language:
-                    lang_vids.append(v.id)
-            if lang_vids:
-                query = session.query(Video).filter(Video.id.in_(lang_vids))
+            if parsed.brands:
+                for p in analysis.get("products_mentioned", []):
+                    if p.get("brand", "") in parsed.brands:
+                        score += 10
+                        break
+                for brand in parsed.brands:
+                    if brand.lower() in v.title.lower():
+                        score += 5
+                        break
+                if score == 0:
+                    continue
 
-        if parsed.days_back > 0:
-            cutoff = get_date_cutoff(parsed.days_back)
-            if cutoff:
-                query = query.filter(Video.published_at >= cutoff)
+            if parsed.format_type:
+                if analysis.get("format") == parsed.format_type:
+                    score += 5
+                elif parsed.format_type.replace("_", " ") in v.title.lower():
+                    score += 3
+                else:
+                    title_lower = v.title.lower()
+                    format_words = {"unboxing": "unbox", "review": "review", "comparison": "vs", "camera_test": "camera"}
+                    kw = format_words.get(parsed.format_type, "")
+                    if kw and kw in title_lower:
+                        score += 3
 
-        if parsed.min_views > 0:
-            query = query.filter(Video.view_count >= parsed.min_views)
+            if parsed.language:
+                if analysis.get("language") == parsed.language:
+                    score += 3
 
-        sort_map = {
-            "view_count": Video.view_count.desc(),
-            "like_count": Video.like_count.desc(),
-            "engagement_rate": Video.engagement_rate.desc(),
-            "published_at": Video.published_at.desc(),
+            if parsed.days_back > 0:
+                cutoff = get_date_cutoff(parsed.days_back)
+                if cutoff and v.published_at and v.published_at < cutoff:
+                    continue
+
+            if parsed.min_views > 0 and v.view_count < parsed.min_views:
+                continue
+
+            phone_related = analysis.get("is_phone_related_strict", analysis.get("is_phone_related", False))
+            if phone_related:
+                score += 2
+
+            matched.append((v, score))
+
+        sort_key_map = {
+            "view_count": lambda x: x[0].view_count,
+            "like_count": lambda x: x[0].like_count,
+            "engagement_rate": lambda x: x[0].engagement_rate,
+            "published_at": lambda x: x[0].published_at or "",
         }
-        order = sort_map.get(parsed.sort_by, Video.view_count.desc())
-        query = query.order_by(order)
+        sort_fn = sort_key_map.get(parsed.sort_by, lambda x: x[0].view_count)
+        is_desc = parsed.sort_order != "asc"
+        if not parsed.brands and not parsed.format_type:
+            sort_fn = lambda x: x[0].view_count
+            is_desc = True
+        matched.sort(key=sort_fn, reverse=is_desc)
 
-        total = query.count()
-        videos = query.limit(FREE_VIDEO_LIMIT + LOCKED_SHOW + 20).all()
+        total = len(matched)
+        videos = [v for v, _ in matched[:FREE_VIDEO_LIMIT + LOCKED_SHOW + 20]]
 
         free_videos = []
         locked_videos = []

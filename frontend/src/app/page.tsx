@@ -53,13 +53,13 @@ export default function Home() {
     }
   }, []);
 
-  const handleAISearch = useCallback(async (query: string) => {
+  const handleAISearch = useCallback(async (query: string, mode?: string) => {
     setState("loading");
     setLoadingStep(3);
     setData(null);
 
     try {
-      const result = await aiSearch(query);
+      const result = await aiSearch(query, mode);
       setSearchData(result);
       setTimeout(() => setState("search-results"), 300);
     } catch {
