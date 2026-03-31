@@ -1,5 +1,8 @@
 # Creatoe UI Rebuild Brief
 
+**Related chat:** "Frontend UI rebuild with TikTok design" — handles the full frontend rebuild.
+**This brief** is the single source of truth for design direction, backend API, and deployment.
+
 ## Product
 - **Name:** Creatoe (by Suggest)
 - **What it does:** AI-powered creator intelligence for commerce. Paste a product link, get matched creators. Search creators/videos by natural language. Campaign builder.
