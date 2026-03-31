@@ -54,8 +54,27 @@
 - [x] Insight Nudges (integration upsells in CampaignModal + CreatorPanel)
 - [x] Instagram teaser (Phyllo integration nudge)
 
+## v4 Creatoe Build — COMPLETED
+- [x] Marketplace link extraction (FK: 266 videos, AMZ: 2,113 videos)
+- [x] Marketplace data in scoring API (FK/AMZ counts + timeline per creator)
+- [x] TikTok dark mode color system (#121212)
+- [x] Creatoe logo animation (typewriter + step-in bounce + footprint dot)
+- [x] Sidebar navigation (icon-only, expands on hover, credits display)
+- [x] 3-mode search (Product Match / Creators / Videos)
+- [x] Video grid with paywall (8 locked behind blur)
+- [x] Subscription model (Free/Pro/Enterprise with usage limits)
+- [x] Pricing page with add-on pricing
+- [x] Business email gating (noted on pricing page)
+- [x] Overnight expansion script (auto-waits for quota reset)
+
+## Running Now
+- [ ] Overnight expansion script (waiting for quota reset at 7:00 AM UTC)
+  - Will add 20 new search queries across Hindi, Tamil, Telugu, Bengali, Gujarati, Malayalam
+  - Will pull videos for up to 300 new creators
+  - Will analyze all new content
+
 ## Remaining
 - [ ] Deploy to Vercel + Render for shareable URL
-- [ ] Caption download with proper rate limiting (v3)
-- [ ] More creators (expand search queries for Tamil/Telugu/Marathi)
+- [ ] Caption download with proper rate limiting
 - [ ] Mobile responsive polish
+- [ ] Login/signup page with email validation
