@@ -7,165 +7,105 @@ const INTEGRATIONS = [
   {
     category: "Your Platforms",
     items: [
-      {
-        name: "Flipkart Commerce Cloud",
-        description: "Product catalog, real-time pricing, ad performance comparison",
-        unlock: "Real product prices, bestseller data, FCC Ads CPV comparison",
-        status: "available" as const,
-      },
-      {
-        name: "Flipkart Affiliate",
-        description: "Conversion tracking, actual sales attribution per creator",
-        unlock: "True ROAS: actual orders and GMV per creator",
-        status: "available" as const,
-      },
-      {
-        name: "Qoruz Creator Database",
-        description: "Import your existing 15K+ creator list for health audit",
-        unlock: "Audit all creators: active, declining, or inactive",
-        status: "available" as const,
-      },
+      { name: "Flipkart Commerce Cloud", description: "Product catalog, real-time pricing, ad performance", unlock: "Real product prices, bestseller data, FCC Ads CPV comparison", status: "available" as const },
+      { name: "Flipkart Affiliate", description: "Conversion tracking, sales attribution per creator", unlock: "True ROAS: actual orders and GMV per creator", status: "available" as const },
+      { name: "Qoruz Creator Database", description: "Import your existing 15K+ creator list for audit", unlock: "Audit all creators: active, declining, or inactive", status: "available" as const },
     ],
   },
   {
     category: "Data Enrichment",
     items: [
-      {
-        name: "Phyllo",
-        description: "Instagram & TikTok audience demographics, cross-platform data",
-        unlock: "Real audience age, gender, location per creator + Instagram reach",
-        status: "available" as const,
-      },
-      {
-        name: "Modash",
-        description: "350M+ creator database enrichment across platforms",
-        unlock: "Expand beyond YouTube to Instagram, TikTok globally",
-        status: "available" as const,
-      },
-      {
-        name: "HypeAuditor",
-        description: "Fake follower detection, audience quality scoring (87% accuracy)",
-        unlock: "Fraud detection with 87% accuracy on follower authenticity",
-        status: "available" as const,
-      },
+      { name: "Phyllo", description: "Instagram & TikTok audience demographics", unlock: "Real audience age, gender, location per creator", status: "available" as const },
+      { name: "Modash", description: "350M+ creator database enrichment", unlock: "Expand beyond YouTube to Instagram, TikTok", status: "available" as const },
+      { name: "HypeAuditor", description: "Fake follower detection (87% accuracy)", unlock: "Fraud detection on follower authenticity", status: "available" as const },
     ],
   },
   {
     category: "Workflow",
     items: [
-      {
-        name: "Google Workspace",
-        description: "Export campaign plans to Google Sheets, auto-generate Slides",
-        unlock: "One-click campaign export as formatted Google Sheet",
-        status: "functional" as const,
-      },
-      {
-        name: "Slack",
-        description: "Real-time alerts for competitive moves, creator health changes",
-        unlock: "Get notified when competitors activate creators",
-        status: "available" as const,
-      },
-      {
-        name: "Google BigQuery",
-        description: "Push scoring data to your data warehouse for custom analysis",
-        unlock: "Your data team builds custom models on creator intelligence",
-        status: "available" as const,
-      },
+      { name: "Google Workspace", description: "Export to Sheets, auto-generate Slides", unlock: "One-click campaign export", status: "functional" as const },
+      { name: "Slack", description: "Real-time alerts for competitive moves", unlock: "Get notified when competitors activate creators", status: "available" as const },
+      { name: "Google BigQuery", description: "Push scoring data to your warehouse", unlock: "Custom models on creator intelligence", status: "available" as const },
     ],
   },
   {
     category: "Coming Soon",
     items: [
-      { name: "Salesforce CRM", description: "Track creator relationships in your CRM", unlock: "", status: "soon" as const },
+      { name: "Salesforce CRM", description: "Track creator relationships", unlock: "", status: "soon" as const },
       { name: "Sprinklr Social", description: "Unified social + creator reporting", unlock: "", status: "soon" as const },
-      { name: "Amazon Advertising", description: "Amazon creator attribution and comparison", unlock: "", status: "soon" as const },
+      { name: "Amazon Advertising", description: "Amazon creator attribution", unlock: "", status: "soon" as const },
     ],
   },
 ];
 
-function StatusButton({ status }: { status: "available" | "functional" | "soon" }) {
-  if (status === "functional") {
-    return (
-      <button className="w-full py-2 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center gap-1.5">
-        <Check size={12} /> Active
-      </button>
-    );
-  }
-  if (status === "soon") {
-    return (
-      <button disabled className="w-full py-2 rounded-lg text-xs font-semibold bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed flex items-center justify-center gap-1.5">
-        <Clock size={12} /> Coming Soon
-      </button>
-    );
-  }
-  return (
-    <button className="w-full py-2 rounded-lg text-xs font-semibold bg-[var(--bg-card)] text-[var(--text-secondary)] hover:text-[var(--text)] hover:bg-[var(--bg-elevated)] border border-[var(--border)] transition-all duration-200 flex items-center justify-center gap-1.5">
-      <Plug size={12} /> Connect
-    </button>
-  );
-}
-
 export default function IntegrationsPage() {
   return (
-    <div className="min-h-screen bg-[var(--bg)]">
-      <header className="border-b border-[var(--border)] glass sticky top-0 z-50">
-        <div className="max-w-[1200px] mx-auto px-6 h-12 flex items-center gap-4">
-          <a href="/" className="flex items-center gap-2 text-[var(--text-muted)] hover:text-[var(--text)] transition-colors">
-            <ArrowLeft size={14} />
-          </a>
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-50 glass" style={{ borderBottom: "1px solid var(--border)" }}>
+        <div className="max-w-[1100px] mx-auto px-6 h-12 flex items-center gap-4">
+          <a href="/" style={{ color: "var(--text-muted)" }}><ArrowLeft size={14} /></a>
           <a href="/"><CreatoeLogoInline /></a>
         </div>
       </header>
 
-      <div className="max-w-[1200px] mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-[var(--text)] mb-3">Integrations</h1>
-          <p className="text-sm text-[var(--text-muted)] max-w-lg mx-auto leading-relaxed">
-            Connect your existing tools to unlock deeper intelligence. Each integration adds a new dimension to your creator matching.
+      <div className="max-w-[1100px] mx-auto px-6 py-16 hero-glow">
+        <div className="relative z-10 text-center mb-14">
+          <h1 className="text-2xl font-light tracking-tight mb-3" style={{ color: "var(--text)" }}>Integrations</h1>
+          <p className="text-[13px] font-light max-w-lg mx-auto" style={{ color: "var(--text-muted)" }}>
+            Connect your tools to unlock deeper intelligence.
           </p>
         </div>
 
-        {INTEGRATIONS.map((cat) => (
-          <div key={cat.category} className="mb-10">
-            <h2 className="text-[10px] font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] mb-4">{cat.category}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {cat.items.map((item) => (
-                <div
-                  key={item.name}
-                  className={`bg-[var(--bg-card)] border rounded-xl p-5 transition-all duration-200 ${
-                    item.status === "soon"
-                      ? "border-[var(--border)] opacity-50"
-                      : "border-[var(--border)] hover:border-[var(--border-light)]"
-                  }`}
-                >
-                  <div className="mb-3">
-                    <div className="text-sm font-semibold text-[var(--text)] mb-1">{item.name}</div>
-                    <div className="text-[11px] text-[var(--text-muted)] leading-relaxed">{item.description}</div>
-                  </div>
-
-                  {item.unlock && (
-                    <div className="bg-[var(--accent-dim)] border border-[var(--accent)]/10 rounded-lg px-3 py-2 mb-3">
-                      <div className="text-[10px] text-[var(--accent)]">
-                        <span className="font-semibold">Unlocks:</span> {item.unlock}
-                      </div>
+        <div className="relative z-10">
+          {INTEGRATIONS.map((cat) => (
+            <div key={cat.category} className="mb-10">
+              <h2 className="text-[9px] tracking-[0.25em] uppercase mb-4 font-normal" style={{ color: "var(--text-dim)" }}>{cat.category}</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {cat.items.map((item) => (
+                  <div key={item.name} className="rounded-2xl p-5 transition-all duration-300"
+                    style={{
+                      backgroundColor: "var(--bg-card)",
+                      border: "1px solid var(--border)",
+                      opacity: item.status === "soon" ? 0.5 : 1,
+                    }}>
+                    <div className="mb-3">
+                      <div className="text-[13px] font-normal mb-1" style={{ color: "var(--text)" }}>{item.name}</div>
+                      <div className="text-[10px] font-light leading-relaxed" style={{ color: "var(--text-dim)" }}>{item.description}</div>
                     </div>
-                  )}
 
-                  <StatusButton status={item.status} />
-                </div>
-              ))}
+                    {item.unlock && (
+                      <div className="rounded-lg px-3 py-2 mb-3" style={{ backgroundColor: "var(--accent-dim)", border: "1px solid rgba(129,140,248,0.08)" }}>
+                        <div className="text-[9px] font-light" style={{ color: "var(--accent)" }}>{item.unlock}</div>
+                      </div>
+                    )}
+
+                    <button
+                      disabled={item.status === "soon"}
+                      className="w-full py-1.5 rounded-lg text-[10px] font-normal flex items-center justify-center gap-1.5 transition-all duration-300"
+                      style={{
+                        color: item.status === "functional" ? "var(--success)" : item.status === "soon" ? "var(--text-dim)" : "var(--text-muted)",
+                        border: `1px solid ${item.status === "functional" ? "rgba(52,211,153,0.15)" : "var(--border)"}`,
+                        backgroundColor: item.status === "functional" ? "rgba(52,211,153,0.06)" : "transparent",
+                        cursor: item.status === "soon" ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {item.status === "functional" ? <><Check size={10} /> Active</> : item.status === "soon" ? <><Clock size={10} /> Coming Soon</> : <><Plug size={10} /> Connect</>}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
 
-        <div className="mt-12 bg-[var(--accent-dim)] border border-[var(--accent)]/15 rounded-2xl p-8 text-center">
-          <h3 className="text-lg font-bold text-[var(--text)] mb-2">Need a custom integration?</h3>
-          <p className="text-sm text-[var(--text-muted)] mb-4 max-w-md mx-auto leading-relaxed">
-            We build custom connectors for enterprise platforms. Contact us to discuss your tech stack.
-          </p>
-          <button className="px-6 py-2.5 bg-[var(--accent)] text-white text-sm font-semibold rounded-xl hover:bg-[var(--accent-hover)] transition-colors duration-200">
-            Contact Enterprise Sales
-          </button>
+          <div className="mt-12 rounded-2xl p-8 text-center" style={{ backgroundColor: "var(--accent-dim)", border: "1px solid rgba(129,140,248,0.1)" }}>
+            <h3 className="text-base font-light mb-2" style={{ color: "var(--text)" }}>Need a custom integration?</h3>
+            <p className="text-[12px] font-light mb-4 max-w-md mx-auto" style={{ color: "var(--text-muted)" }}>
+              We build custom connectors for enterprise platforms.
+            </p>
+            <button className="px-5 py-2 text-[11px] font-normal rounded-xl transition-colors duration-300" style={{ color: "var(--accent)", border: "1px solid var(--accent)" }}>
+              Contact Enterprise Sales
+            </button>
+          </div>
         </div>
       </div>
     </div>

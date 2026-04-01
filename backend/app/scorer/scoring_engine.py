@@ -363,6 +363,78 @@ def get_brand_evidence(phone_videos: list[Video], brand: str) -> list[dict]:
     return sorted(evidence, key=lambda x: x["views"], reverse=True)[:5]
 
 
+TIER_AVG_CPV = {"mega": 5.0, "macro": 8.0, "mid": 15.0, "micro": 25.0, "nano": 40.0}
+
+STATE_MAP = {
+    "hindi": "North India", "tamil": "Tamil Nadu", "telugu": "AP & Telangana",
+    "bengali": "West Bengal", "kannada": "Karnataka", "malayalam": "Kerala",
+    "marathi": "Maharashtra", "gujarati": "Gujarat", "punjabi": "Punjab",
+}
+
+
+def _compute_insight_flags(
+    creator: Creator, product: ProductData,
+    phone_videos: list, all_videos: list,
+    brand_counts: dict, brand_evidence: list,
+    predicted_cpv: float, format_mix: str,
+) -> list[dict]:
+    flags = []
+    target = product.brand
+
+    recent_brand_count = len([
+        v for v in phone_videos
+        if v.analysis and any(
+            p.get("brand") == target for p in v.analysis.get("products_mentioned", [])
+        ) and _is_recent(v.published_at, 180)
+    ])
+
+    if recent_brand_count >= 5:
+        flags.append({"label": "Brand saturated", "type": "amber"})
+    elif recent_brand_count == 0 and brand_counts:
+        competitors = COMPETING_BRANDS.get(target, [])
+        if any(brand_counts.get(c, 0) > 0 for c in competitors):
+            flags.append({"label": "Fresh voice", "type": "green"})
+
+    unique_brands = len([b for b, cnt in brand_counts.items() if cnt > 0])
+    if unique_brands >= 4:
+        flags.append({"label": "Multi-brand", "type": "blue"})
+    elif unique_brands <= 1 and brand_counts:
+        top_brand = max(brand_counts, key=brand_counts.get) if brand_counts else ""
+        total_vids = sum(brand_counts.values())
+        if total_vids > 0 and brand_counts.get(top_brand, 0) / total_vids > 0.7:
+            flags.append({"label": "Single-brand", "type": "amber"})
+
+    shorts = sum(1 for v in all_videos if v.analysis and v.analysis.get("duration_type") == "short")
+    if len(all_videos) > 0 and shorts / len(all_videos) > 0.6:
+        flags.append({"label": "Shorts-heavy", "type": "amber"})
+
+    formats = {}
+    for v in phone_videos:
+        if v.analysis:
+            fmt = v.analysis.get("format", "review")
+            formats[fmt] = formats.get(fmt, 0) + 1
+    if formats:
+        top_fmt = max(formats, key=formats.get)
+        total_fmt = sum(formats.values())
+        if total_fmt > 0 and formats[top_fmt] / total_fmt > 0.6 and total_fmt >= 3:
+            label_map = {
+                "camera_test": "Camera specialist", "comparison": "Comparison expert",
+                "unboxing": "Unboxing specialist", "review": "Review focused",
+                "first_impressions": "First-look specialist",
+            }
+            flags.append({"label": label_map.get(top_fmt, f"{top_fmt.replace('_',' ').title()} specialist"), "type": "blue"})
+
+    lang = creator.primary_language or ""
+    if lang and lang != "english" and lang in STATE_MAP:
+        flags.append({"label": f"{STATE_MAP[lang]} reach", "type": "blue"})
+
+    tier_avg = TIER_AVG_CPV.get(creator.tier, 15.0)
+    if predicted_cpv > tier_avg * 2 and predicted_cpv > 0:
+        flags.append({"label": "High CPV", "type": "amber"})
+
+    return flags
+
+
 def score_creator_for_product(creator: Creator, product: ProductData, session=None) -> dict:
     """Score a single creator against a specific product. Returns full breakdown."""
     close_session = False
@@ -456,6 +528,12 @@ def score_creator_for_product(creator: Creator, product: ProductData, session=No
                     "video_id": v.video_id,
                 })
 
+    brand_counts = _extract_brands_from_videos(phone_videos)
+    flags = _compute_insight_flags(
+        creator, product, phone_videos, all_videos,
+        brand_counts, brand_evidence, predicted_cpv, format_mix
+    )
+
     if close_session:
         session.close()
 
@@ -479,6 +557,7 @@ def score_creator_for_product(creator: Creator, product: ProductData, session=No
         "last_phone_date": max((v.published_at for v in phone_videos if v.published_at), default=""),
         "marketplace": marketplace,
         "marketplace_timeline": marketplace_timeline[:5],
+        "flags": flags,
     }
 
 

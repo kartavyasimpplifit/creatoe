@@ -15,6 +15,7 @@ import { CreatorPanel } from "@/components/creator-panel";
 import { CampaignBar } from "@/components/campaign-bar";
 import { CampaignModal } from "@/components/campaign-modal";
 import { VideoGrid } from "@/components/video-grid";
+import { IntelligenceDashboard } from "@/components/intelligence-dashboard";
 import { Lock } from "lucide-react";
 
 type AppState = "idle" | "loading" | "product-results" | "search-results";
@@ -48,6 +49,7 @@ export default function Home() {
     setLoadingStep(0);
     setCampaignIds([]);
     setSearchData(null);
+    setNavPage("search");
     useCredits(15);
 
     const timers = [300, 1200, 2400, 3200, 4000];
@@ -69,6 +71,7 @@ export default function Home() {
     setState("loading");
     setLoadingStep(3);
     setData(null);
+    setNavPage("search");
     useCredits(5);
 
     try {
@@ -110,6 +113,9 @@ export default function Home() {
     if (id === "search" || id === "match") {
       handleReset();
       setNavPage(id as NavPage);
+    } else if (id === "intel") {
+      handleReset();
+      setNavPage("intel");
     } else if (id === "integrations") {
       window.location.href = "/integrations";
     } else if (id === "pricing") {
@@ -131,63 +137,71 @@ export default function Home() {
     return b.match_score - a.match_score;
   }) || [];
 
+  const showMainContent = navPage !== "intel";
+
   return (
     <div className="min-h-screen flex">
       <Sidebar active={navPage} onNavigate={handleNav} credits={credits} />
 
-      <main className="flex-1 ml-[56px]">
-        {state === "idle" && (
+      <main className="flex-1 ml-[48px]">
+        {navPage === "intel" && (
+          <IntelligenceDashboard stats={stats} />
+        )}
+
+        {showMainContent && state === "idle" && (
           <SearchHero onProductSearch={handleProductSearch} onAISearch={handleAISearch} stats={stats} />
         )}
 
-        {state === "loading" && (
+        {showMainContent && state === "loading" && (
           <LoadingSequence step={loadingStep} url={productUrl} product={data?.product} errorMessage={errorMessage} />
         )}
 
-        {state === "product-results" && data && (
-          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32 animate-fade-in">
-            {/* Product + Demand Intel */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
+        {showMainContent && state === "product-results" && data && (
+          <div className="max-w-[1400px] mx-auto px-8 pt-8 pb-32 animate-fade-in">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-10">
               <ProductCard product={data.product} totalMatched={data.total_matched} totalDisqualified={data.total_disqualified} />
               <div className="lg:col-span-2">
                 <DemandIntelCard intel={data.demand_intelligence} product={data.product} />
               </div>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-wrap items-center gap-2 mb-6">
-              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-semibold mr-1">Tier</span>
+            {/* Filters — minimal */}
+            <div className="flex flex-wrap items-center gap-2 mb-8">
+              <span className="text-[9px] tracking-[0.2em] uppercase font-normal mr-2" style={{ color: "var(--text-dim)" }}>Tier</span>
               {["", "mega", "macro", "mid", "micro"].map(t => (
                 <button key={t} onClick={() => setFilters(f => ({ ...f, tier: t }))}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                    filters.tier === t
-                      ? "bg-[var(--accent)] text-white"
-                      : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
-                  }`}>
+                  className="px-3 py-1 rounded-full text-[10px] font-normal transition-all duration-300"
+                  style={{
+                    color: filters.tier === t ? "var(--text)" : "var(--text-dim)",
+                    backgroundColor: filters.tier === t ? "var(--accent-dim)" : "transparent",
+                    border: `1px solid ${filters.tier === t ? "rgba(129,140,248,0.2)" : "var(--border)"}`,
+                  }}>
                   {t || "All"}
                 </button>
               ))}
 
-              <div className="w-px h-5 bg-[var(--border)] mx-2" />
+              <div className="w-px h-4 mx-2" style={{ backgroundColor: "var(--border)" }} />
 
-              <span className="text-[10px] text-[var(--text-muted)] uppercase tracking-[0.2em] font-semibold mr-1">Lang</span>
+              <span className="text-[9px] tracking-[0.2em] uppercase font-normal mr-2" style={{ color: "var(--text-dim)" }}>Lang</span>
               {data.demand_intelligence.language_coverage && Object.entries(data.demand_intelligence.language_coverage)
                 .sort(([, a], [, b]) => b - a).slice(0, 5)
                 .map(([lang, count]) => (
                   <button key={lang} onClick={() => setFilters(f => ({ ...f, language: f.language === lang ? "" : lang }))}
-                    className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200 ${
-                      filters.language === lang
-                        ? "bg-[var(--accent)] text-white"
-                        : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
-                    }`}>
-                    {lang.charAt(0).toUpperCase() + lang.slice(1)} <span className="opacity-50 ml-0.5">{count}</span>
+                    className="px-3 py-1 rounded-full text-[10px] font-normal transition-all duration-300"
+                    style={{
+                      color: filters.language === lang ? "var(--text)" : "var(--text-dim)",
+                      backgroundColor: filters.language === lang ? "var(--accent-dim)" : "transparent",
+                      border: `1px solid ${filters.language === lang ? "rgba(129,140,248,0.2)" : "var(--border)"}`,
+                    }}>
+                    {lang.charAt(0).toUpperCase() + lang.slice(1)} <span style={{ opacity: 0.4 }}>{count}</span>
                   </button>
                 ))}
 
               <div className="flex-1" />
 
               <select value={filters.sort} onChange={e => setFilters(f => ({ ...f, sort: e.target.value }))}
-                className="bg-[var(--bg-card)] border border-[var(--border)] rounded-full px-4 py-1.5 text-xs text-[var(--text)] outline-none appearance-none cursor-pointer">
+                className="rounded-full px-3 py-1 text-[10px] font-normal outline-none cursor-pointer appearance-none"
+                style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", color: "var(--text-secondary)" }}>
                 <option value="match_score">Best Match</option>
                 <option value="subscribers">Subscribers</option>
                 <option value="engagement">Engagement</option>
@@ -200,12 +214,12 @@ export default function Home() {
           </div>
         )}
 
-        {state === "search-results" && searchData && (
-          <div className="max-w-[1400px] mx-auto px-6 pt-6 pb-32 animate-fade-in">
-            <div className="mb-6">
-              <div className="text-xs text-[var(--text-muted)] mb-1">Results for</div>
-              <div className="text-lg font-bold text-[var(--text)]">&ldquo;{searchData.query.raw_query as string}&rdquo;</div>
-              <div className="text-xs text-[var(--text-muted)] mt-1">
+        {showMainContent && state === "search-results" && searchData && (
+          <div className="max-w-[1400px] mx-auto px-8 pt-8 pb-32 animate-fade-in">
+            <div className="mb-8">
+              <div className="text-[10px] font-light mb-1" style={{ color: "var(--text-dim)" }}>Results for</div>
+              <div className="text-lg font-light" style={{ color: "var(--text)" }}>&ldquo;{searchData.query.raw_query as string}&rdquo;</div>
+              <div className="text-[11px] font-light mt-1" style={{ color: "var(--text-dim)" }}>
                 {searchData.total_results.toLocaleString()} results · {searchData.free_results.length} shown free
               </div>
             </div>
@@ -214,35 +228,35 @@ export default function Home() {
               <VideoGrid freeVideos={searchData.free_results} lockedVideos={searchData.locked_results}
                 totalResults={searchData.total_results} upgradeMessage={searchData.upgrade_message} />
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {searchData.free_results.map((c, i) => (
                   <div key={(c.id as number) || i}
-                    className="bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 card-hover cursor-pointer animate-fade-in"
-                    style={{ animationDelay: `${i * 50}ms` }}
+                    className="rounded-2xl p-5 card-hover cursor-pointer animate-fade-in"
+                    style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", animationDelay: `${i * 60}ms` }}
                     onClick={() => { setSelectedCreator(c.id as number); useCredits(5); }}>
                     <div className="flex items-center gap-3 mb-3">
-                      <img src={(c.thumbnail_url as string) || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name as string)}&background=222&color=fff&size=40`}
-                        className="w-10 h-10 rounded-full object-cover bg-[var(--bg-elevated)]" alt="" />
+                      <img src={(c.thumbnail_url as string) || `https://ui-avatars.com/api/?name=${encodeURIComponent(c.name as string)}&background=111&color=e8e8e8&size=40`}
+                        className="w-10 h-10 rounded-full object-cover" style={{ backgroundColor: "var(--bg-elevated)" }} alt="" />
                       <div className="flex-1 min-w-0">
-                        <div className="text-sm font-semibold text-[var(--text)] truncate">{c.name as string}</div>
-                        <div className="text-[11px] text-[var(--text-muted)]">{(c.subscriber_count as number).toLocaleString()} · {c.tier as string} · {c.primary_language as string}</div>
+                        <div className="text-[13px] font-normal truncate" style={{ color: "var(--text)" }}>{c.name as string}</div>
+                        <div className="text-[10px] font-light" style={{ color: "var(--text-dim)" }}>{(c.subscriber_count as number).toLocaleString()} · {c.tier as string}</div>
                       </div>
                     </div>
-                    <div className="text-xs text-[var(--text-muted)]">{c.phone_video_count as number} phone videos · {(c.engagement_rate as number).toFixed(1)}% eng</div>
+                    <div className="text-[10px] font-light" style={{ color: "var(--text-dim)" }}>{c.phone_video_count as number} phone videos · {(c.engagement_rate as number).toFixed(1)}% eng</div>
                   </div>
                 ))}
                 {searchData.locked_results.map((c, i) => (
-                  <div key={`l-${i}`} className="relative bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl p-5 overflow-hidden animate-fade-in" style={{ animationDelay: `${(searchData.free_results.length + i) * 50}ms` }}>
+                  <div key={`l-${i}`} className="relative rounded-2xl p-5 overflow-hidden animate-fade-in"
+                    style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", animationDelay: `${(searchData.free_results.length + i) * 60}ms` }}>
                     <div className="blur-[6px] pointer-events-none">
                       <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 rounded-full bg-[var(--bg-elevated)]" />
-                        <div><div className="text-sm font-semibold text-[var(--text)]">{c.name as string}</div></div>
+                        <div className="w-10 h-10 rounded-full" style={{ backgroundColor: "var(--bg-elevated)" }} />
+                        <div><div className="text-[13px] font-normal" style={{ color: "var(--text)" }}>{c.name as string}</div></div>
                       </div>
                     </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] border border-[var(--border)] flex items-center justify-center">
-                        <Lock size={14} className="text-[var(--text-muted)]" />
-                      </div>
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                      <Lock size={14} style={{ color: "var(--text-muted)" }} />
+                      <span className="text-[9px] font-light" style={{ color: "var(--text-dim)" }}>Upgrade</span>
                     </div>
                   </div>
                 ))}
@@ -250,10 +264,8 @@ export default function Home() {
             )}
 
             {searchData.upgrade_message && (
-              <div className="mt-8 text-center">
-                <div className="inline-flex items-center gap-2 bg-[var(--accent-dim)] border border-[var(--accent)]/20 rounded-full px-5 py-2.5">
-                  <span className="text-xs text-[var(--accent)]">{searchData.upgrade_message}</span>
-                </div>
+              <div className="mt-10 text-center">
+                <span className="text-[11px] font-light" style={{ color: "var(--accent)" }}>{searchData.upgrade_message}</span>
               </div>
             )}
           </div>

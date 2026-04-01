@@ -10,72 +10,60 @@ function VideoCard({ video, locked = false }: { video: Record<string, unknown>; 
   return (
     <div className={`relative group ${locked ? "" : "cursor-pointer"}`}>
       {locked ? (
-        <div className="relative overflow-hidden rounded-xl">
-          <div className="aspect-[9/16] sm:aspect-video bg-[var(--bg-elevated)] rounded-xl overflow-hidden blur-[8px]">
-            <img
-              src={video.thumbnail_url as string}
-              alt=""
-              className="w-full h-full object-cover"
-              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
+        <div className="relative overflow-hidden rounded-2xl">
+          <div className="aspect-video rounded-2xl overflow-hidden blur-[10px]" style={{ backgroundColor: "var(--bg-elevated)" }}>
+            <img src={video.thumbnail_url as string} alt="" className="w-full h-full object-cover"
+              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
           </div>
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-xl">
-            <div className="w-10 h-10 rounded-full bg-[var(--bg-card)] border border-[var(--border)] flex items-center justify-center">
-              <Lock size={16} className="text-[var(--text-muted)]" />
-            </div>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-2xl" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+            <Lock size={18} style={{ color: "var(--text-muted)" }} />
+            <span className="text-[10px] font-light" style={{ color: "var(--text-muted)" }}>Upgrade to unlock</span>
           </div>
         </div>
       ) : (
         <a href={`https://youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">
-          <div className="relative aspect-[9/16] sm:aspect-video bg-[var(--bg-elevated)] rounded-xl overflow-hidden group-hover:ring-2 ring-[var(--accent)]/20 transition-all duration-200">
-            <img
-              src={video.thumbnail_url as string}
-              alt={video.title as string}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
-            />
-            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
-              <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-lg">
-                <Play size={18} fill="#000" stroke="none" />
+          <div className="relative aspect-video rounded-2xl overflow-hidden transition-all duration-300 group-hover:ring-1 ring-[rgba(129,140,248,0.15)]" style={{ backgroundColor: "var(--bg-elevated)" }}>
+            <img src={video.thumbnail_url as string} alt={video.title as string}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ backgroundColor: "rgba(0,0,0,0.2)" }}>
+              <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ backgroundColor: "rgba(255,255,255,0.9)" }}>
+                <Play size={20} fill="#000" stroke="none" />
               </div>
             </div>
-            <div className="absolute bottom-2 left-2 flex items-center gap-1 bg-black/70 backdrop-blur-sm rounded-lg px-2 py-1">
-              <Play size={10} fill="white" stroke="none" />
-              <span className="text-[11px] font-semibold text-white" style={{ fontFamily: "var(--font-mono)" }}>
+            <div className="absolute bottom-2 left-2 flex items-center gap-1 rounded-md px-1.5 py-0.5" style={{ backgroundColor: "rgba(0,0,0,0.7)" }}>
+              <span className="text-[10px] font-medium text-white" style={{ fontFamily: "var(--font-mono)" }}>
                 {formatNumber(video.view_count as number)}
               </span>
             </div>
             {format && (
-              <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-0.5">
-                <span className="text-[9px] font-semibold text-white uppercase tracking-wider">{format.replace("_", " ")}</span>
+              <div className="absolute top-2 left-2 rounded-md px-1.5 py-0.5" style={{ backgroundColor: "rgba(0,0,0,0.6)" }}>
+                <span className="text-[8px] font-medium text-white uppercase tracking-wider">{format.replace("_", " ")}</span>
               </div>
             )}
           </div>
         </a>
       )}
 
-      <div className="mt-3 flex items-start gap-2.5">
+      <div className="mt-2.5 flex items-start gap-2">
         {video.creator_thumbnail && !locked ? (
-          <img src={video.creator_thumbnail as string} className="w-8 h-8 rounded-full object-cover bg-[var(--bg-elevated)] mt-0.5 flex-shrink-0" alt="" />
+          <img src={video.creator_thumbnail as string} className="w-7 h-7 rounded-full object-cover mt-0.5 flex-shrink-0" style={{ backgroundColor: "var(--bg-elevated)" }} alt="" />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-[var(--bg-elevated)] mt-0.5 flex-shrink-0" />
+          <div className="w-7 h-7 rounded-full mt-0.5 flex-shrink-0" style={{ backgroundColor: "var(--bg-elevated)" }} />
         )}
         <div className="flex-1 min-w-0">
           {locked ? (
             <>
-              <div className="h-3 bg-[var(--bg-elevated)] rounded w-3/4 mb-1.5" />
-              <div className="h-2.5 bg-[var(--bg-elevated)] rounded w-1/2" />
+              <div className="h-3 rounded w-3/4 mb-1" style={{ backgroundColor: "var(--bg-elevated)" }} />
+              <div className="h-2.5 rounded w-1/2" style={{ backgroundColor: "var(--bg-elevated)" }} />
             </>
           ) : (
             <>
-              <div className="text-[13px] font-medium text-[var(--text)] line-clamp-2 leading-snug group-hover:text-[var(--accent)] transition-colors duration-200">
+              <div className="text-[12px] font-normal line-clamp-2 leading-snug transition-colors duration-300" style={{ color: "var(--text)" }}>
                 {video.title as string}
               </div>
-              <div className="text-[11px] text-[var(--text-muted)] mt-1">
+              <div className="text-[10px] mt-0.5" style={{ color: "var(--text-dim)" }}>
                 {video.creator_name as string}
-              </div>
-              <div className="text-[10px] text-[var(--text-dim)] mt-0.5">
-                {video.published_at ? (video.published_at as string).split("T")[0] : ""}
               </div>
             </>
           )}
@@ -93,11 +81,8 @@ export function VideoGrid({ freeVideos, lockedVideos, totalResults, upgradeMessa
 }) {
   return (
     <div>
-      <div className="text-sm text-[var(--text-muted)] mb-6">
-        <span className="font-semibold text-[var(--text)]" style={{ fontFamily: "var(--font-mono)" }}>
-          {totalResults.toLocaleString()}
-        </span>{" "}
-        relevant videos found
+      <div className="text-[13px] font-light mb-6" style={{ color: "var(--text-muted)" }}>
+        <span style={{ color: "var(--text)", fontFamily: "var(--font-mono)" }}>{totalResults.toLocaleString()}</span> videos found
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -115,12 +100,10 @@ export function VideoGrid({ freeVideos, lockedVideos, totalResults, upgradeMessa
 
       {upgradeMessage && (
         <div className="mt-12 text-center">
-          <div className="inline-flex flex-col items-center gap-3 bg-[var(--bg-card)] border border-[var(--border)] rounded-2xl px-8 py-6">
-            <div className="w-10 h-10 rounded-full bg-[var(--accent-dim)] flex items-center justify-center">
-              <Lock size={18} className="text-[var(--accent)]" />
-            </div>
-            <div className="text-sm text-[var(--text)]">{upgradeMessage}</div>
-            <button className="px-5 py-2 bg-[var(--accent)] text-white text-xs font-semibold rounded-xl hover:bg-[var(--accent-hover)] transition-colors duration-200">
+          <div className="inline-flex flex-col items-center gap-3 rounded-2xl px-8 py-6" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            <Lock size={16} style={{ color: "var(--text-muted)" }} />
+            <div className="text-[12px] font-light" style={{ color: "var(--text-secondary)" }}>{upgradeMessage}</div>
+            <button className="px-4 py-1.5 text-[11px] font-medium rounded-lg transition-colors duration-300" style={{ color: "var(--accent)", border: "1px solid var(--accent)" }}>
               Unlock Full Access
             </button>
           </div>
