@@ -383,9 +383,9 @@ def build_campaign(req: CampaignRequest):
             continue
 
         score_data = score_creator_for_product(creator, product, session) if product else None
-        cost_min = score_data["cost_estimate"]["min"] if score_data else creator.estimated_cost_min
-        cost_max = score_data["cost_estimate"]["max"] if score_data else creator.estimated_cost_max
-        predicted_views = score_data["predicted_views"] if score_data else 0
+        cost_min = score_data.get("cost_estimate", {}).get("min", creator.estimated_cost_min) if score_data else creator.estimated_cost_min
+        cost_max = score_data.get("cost_estimate", {}).get("max", creator.estimated_cost_max) if score_data else creator.estimated_cost_max
+        predicted_views = score_data.get("predicted_views", 0) if score_data else 0
 
         total_min += cost_min
         total_max += cost_max
@@ -408,7 +408,7 @@ def build_campaign(req: CampaignRequest):
             "predicted_views": predicted_views,
             "cpv": round((cost_min + cost_max) / 2 / max(predicted_views, 1), 2),
             "youtube_url": yt_url,
-            "match_score": score_data["match_score"] if score_data else 0,
+            "match_score": score_data.get("match_score", 0) if score_data else 0,
         })
 
     avg_cpv = round((total_min + total_max) / 2 / max(total_reach, 1), 2)
