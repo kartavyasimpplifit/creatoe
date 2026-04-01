@@ -139,7 +139,10 @@ export async function analyzeProduct(url: string): Promise<AnalyzeResponse> {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ url }),
   });
-  if (!res.ok) throw new Error("Analysis failed");
+  if (!res.ok) {
+    const err = await res.json().catch(() => null);
+    throw new Error(err?.detail || "Analysis failed");
+  }
   return res.json();
 }
 

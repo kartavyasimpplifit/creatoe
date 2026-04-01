@@ -85,6 +85,13 @@ def analyze_product_and_match(req: ProductRequest):
     Main endpoint: paste a product URL, get matched creators with full intelligence.
     """
     product = scrape_product(req.url)
+
+    if not product.brand:
+        raise HTTPException(
+            422,
+            detail="Creatoe currently supports smartphones only. We couldn't detect a phone brand in this product. Try pasting a Flipkart or Amazon link for a Samsung, Realme, Redmi, OnePlus, or other smartphone.",
+        )
+
     result = score_all_for_product(product, limit=200)
 
     session = SessionLocal()

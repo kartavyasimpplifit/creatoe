@@ -12,10 +12,11 @@ const STEPS = [
   { label: "Ranking results", detail: "Ordering by product-match score..." },
 ];
 
-export function LoadingSequence({ step, url, product }: {
+export function LoadingSequence({ step, url, product, errorMessage }: {
   step: number;
   url: string;
   product?: ProductData | null;
+  errorMessage?: string;
 }) {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-5">
@@ -50,9 +51,13 @@ export function LoadingSequence({ step, url, product }: {
         )}
 
         {step === -1 ? (
-          <div className="bg-[var(--danger)]/10 border border-[var(--danger)]/20 rounded-xl p-6 text-center">
-            <div className="text-[var(--danger)] text-sm font-semibold mb-2">Analysis failed</div>
-            <div className="text-xs text-[var(--text-muted)]">Check the URL and try again.</div>
+          <div className="rounded-xl p-6 text-center" style={{ background: "rgba(254,44,85,0.08)", border: "1px solid rgba(254,44,85,0.15)" }}>
+            <div style={{ color: "var(--danger)" }} className="text-sm font-semibold mb-2">
+              {errorMessage && errorMessage !== "Analysis failed" ? "Not supported" : "Analysis failed"}
+            </div>
+            <div className="text-xs" style={{ color: "var(--text-muted)" }}>
+              {errorMessage || "Check the URL and try again."}
+            </div>
           </div>
         ) : (
           <div className="bg-[var(--bg-card)] border border-[var(--border)] rounded-xl p-4 space-y-1.5">

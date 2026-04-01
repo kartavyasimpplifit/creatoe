@@ -32,6 +32,7 @@ export default function Home() {
   const [showCampaign, setShowCampaign] = useState(false);
   const [campaignData, setCampaignData] = useState<CampaignData | null>(null);
   const [loadingStep, setLoadingStep] = useState(0);
+  const [errorMessage, setErrorMessage] = useState("");
   const [credits, setCredits] = useState(10000);
   const [filters, setFilters] = useState({ tier: "", language: "", sort: "match_score" });
 
@@ -57,9 +58,10 @@ export default function Home() {
       setData(result);
       setLoadingStep(6);
       setTimeout(() => setState("product-results"), 600);
-    } catch {
+    } catch (err) {
+      setErrorMessage(err instanceof Error ? err.message : "Analysis failed");
       setLoadingStep(-1);
-      setTimeout(() => setState("idle"), 3000);
+      setTimeout(() => setState("idle"), 5000);
     }
   }, []);
 
@@ -139,7 +141,7 @@ export default function Home() {
         )}
 
         {state === "loading" && (
-          <LoadingSequence step={loadingStep} url={productUrl} product={data?.product} />
+          <LoadingSequence step={loadingStep} url={productUrl} product={data?.product} errorMessage={errorMessage} />
         )}
 
         {state === "product-results" && data && (
