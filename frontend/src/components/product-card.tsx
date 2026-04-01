@@ -4,8 +4,8 @@ import type { ProductData } from "@/lib/api";
 import { formatNumber } from "@/lib/api";
 
 const BAND_COLORS: Record<string, string> = {
-  budget: "#34d399", mid: "#60a5fa", "mid-premium": "#a78bfa",
-  premium: "#fbbf24", "ultra-premium": "#fb7185",
+  budget: "#bbb", mid: "#999", "mid-premium": "#888",
+  premium: "#777", "ultra-premium": "#666",
 };
 
 export function ProductCard({ product, totalMatched, totalDisqualified }: {
@@ -52,7 +52,7 @@ export function ProductCard({ product, totalMatched, totalDisqualified }: {
       <div className="pt-4" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="flex items-end justify-between">
           <div>
-            <div className="text-4xl font-light text-gradient tracking-tight" style={{ fontFamily: "var(--font-mono)" }}>
+            <div className="text-4xl font-light tracking-tight" style={{ color: "var(--text)", fontFamily: "var(--font-mono)" }}>
               {formatNumber(totalMatched)}
             </div>
             <div className="text-[8px] tracking-[0.25em] mt-1 font-normal lowercase" style={{ color: "var(--text-dim)" }}>creators matched</div>

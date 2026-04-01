@@ -5,11 +5,11 @@ import { formatNumber } from "@/lib/api";
 import { Plus, Check } from "lucide-react";
 
 const TIER_COLORS: Record<string, string> = {
-  mega: "#a78bfa",
-  macro: "#60a5fa",
-  mid: "#34d399",
-  micro: "#fbbf24",
-  nano: "#888",
+  mega: "#e8e8e8",
+  macro: "#bbb",
+  mid: "#999",
+  micro: "#777",
+  nano: "#555",
 };
 
 interface Flag {
@@ -44,10 +44,10 @@ function CreatorCard({ creator, onSelect, isInCampaign, onToggleCampaign, index 
       className={`rounded-2xl cursor-pointer card-hover animate-fade-in overflow-hidden ${isTop3 ? "glow-border" : ""}`}
       style={{
         backgroundColor: "var(--bg-card)",
-        border: `1px solid ${isInCampaign ? "rgba(129,140,248,0.3)" : "var(--border)"}`,
+        border: `1px solid ${isInCampaign ? "rgba(255,255,255,0.15)" : "var(--border)"}`,
         animationDelay: `${Math.min(index * 60, 600)}ms`,
         borderTop: isTop3 ? "2px solid" : undefined,
-        borderImage: isTop3 ? "linear-gradient(90deg, var(--accent), #a78bfa) 1" : undefined,
+        borderImage: isTop3 ? "linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04)) 1" : undefined,
       }}
       onClick={() => onSelect(c.id)}
     >
@@ -74,7 +74,7 @@ function CreatorCard({ creator, onSelect, isInCampaign, onToggleCampaign, index 
           <div
             className="text-lg font-light tabular-nums"
             style={{
-              color: creator.match_score >= 65 ? "var(--success)" : creator.match_score >= 45 ? "var(--warning)" : "var(--text-muted)",
+              color: creator.match_score >= 65 ? "var(--text)" : creator.match_score >= 45 ? "var(--text-secondary)" : "var(--text-muted)",
               fontFamily: "var(--font-mono)",
             }}
           >
@@ -98,9 +98,9 @@ function CreatorCard({ creator, onSelect, isInCampaign, onToggleCampaign, index 
           onClick={e => { e.stopPropagation(); onToggleCampaign(c.id); }}
           className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300"
           style={{
-            backgroundColor: isInCampaign ? "var(--accent)" : "transparent",
+            backgroundColor: isInCampaign ? "var(--text)" : "transparent",
             border: isInCampaign ? "none" : "1px solid var(--border)",
-            color: isInCampaign ? "white" : "var(--text-dim)",
+            color: isInCampaign ? "black" : "var(--text-dim)",
           }}
         >
           {isInCampaign ? <Check size={12} /> : <Plus size={12} />}

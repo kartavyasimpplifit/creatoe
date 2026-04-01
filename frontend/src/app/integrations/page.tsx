@@ -74,8 +74,8 @@ export default function IntegrationsPage() {
                     </div>
 
                     {item.unlock && (
-                      <div className="rounded-lg px-3 py-2 mb-3" style={{ backgroundColor: "var(--accent-dim)", border: "1px solid rgba(129,140,248,0.08)" }}>
-                        <div className="text-[9px] font-light" style={{ color: "var(--accent)" }}>{item.unlock}</div>
+                      <div className="rounded-lg px-3 py-2 mb-3" style={{ backgroundColor: "var(--bg-elevated)", border: "1px solid var(--border)" }}>
+                        <div className="text-[9px] font-light" style={{ color: "var(--text-secondary)" }}>{item.unlock}</div>
                       </div>
                     )}
 
@@ -97,12 +97,12 @@ export default function IntegrationsPage() {
             </div>
           ))}
 
-          <div className="mt-12 rounded-2xl p-8 text-center" style={{ backgroundColor: "var(--accent-dim)", border: "1px solid rgba(129,140,248,0.1)" }}>
+          <div className="mt-12 rounded-2xl p-8 text-center" style={{ backgroundColor: "var(--bg-elevated)", border: "1px solid var(--border)" }}>
             <h3 className="text-base font-light mb-2" style={{ color: "var(--text)" }}>Need a custom integration?</h3>
             <p className="text-[12px] font-light mb-4 max-w-md mx-auto" style={{ color: "var(--text-muted)" }}>
               We build custom connectors for enterprise platforms.
             </p>
-            <button className="px-5 py-2 text-[11px] font-normal rounded-xl transition-colors duration-300" style={{ color: "var(--accent)", border: "1px solid var(--accent)" }}>
+            <button className="px-5 py-2 text-[11px] font-normal rounded-xl transition-colors duration-300" style={{ color: "var(--text)", border: "1px solid rgba(255,255,255,0.15)" }}>
               Contact Enterprise Sales
             </button>
           </div>

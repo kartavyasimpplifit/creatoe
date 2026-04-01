@@ -65,7 +65,7 @@ export function SearchHero({ onProductSearch, onAISearch, stats }: {
               className="text-[12px] font-normal transition-all duration-300 pb-1"
               style={{
                 color: mode === m.key ? "var(--text)" : "var(--text-dim)",
-                borderBottom: mode === m.key ? "1px solid var(--accent)" : "1px solid transparent",
+                borderBottom: mode === m.key ? "1px solid var(--text)" : "1px solid transparent",
               }}
             >
               {m.label}
@@ -99,7 +99,7 @@ export function SearchHero({ onProductSearch, onAISearch, stats }: {
               type="submit"
               disabled={!input.trim()}
               className="mr-2 px-4 py-1.5 text-[12px] font-medium rounded-xl transition-all duration-300 disabled:opacity-10"
-              style={{ color: "var(--accent)" }}
+              style={{ color: "var(--text-secondary)" }}
             >
               {mode === "product" ? "Analyze" : "Search"}
             </button>
@@ -134,7 +134,7 @@ export function SearchHero({ onProductSearch, onAISearch, stats }: {
             }}
             className="text-[11px] font-light transition-colors duration-300 mb-4"
             style={{ color: "var(--text-dim)" }}
-            onMouseEnter={e => { e.currentTarget.style.color = "var(--accent)"; }}
+            onMouseEnter={e => { e.currentTarget.style.color = "var(--text-secondary)"; }}
             onMouseLeave={e => { e.currentTarget.style.color = "var(--text-dim)"; }}
           >
             Try with Realme Narzo 70 5G →

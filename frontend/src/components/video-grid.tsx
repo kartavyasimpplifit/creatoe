@@ -22,7 +22,7 @@ function VideoCard({ video, locked = false }: { video: Record<string, unknown>; 
         </div>
       ) : (
         <a href={`https://youtube.com/watch?v=${video.video_id}`} target="_blank" rel="noopener noreferrer">
-          <div className="relative aspect-video rounded-2xl overflow-hidden transition-all duration-300 group-hover:ring-1 ring-[rgba(129,140,248,0.15)]" style={{ backgroundColor: "var(--bg-elevated)" }}>
+          <div className="relative aspect-video rounded-2xl overflow-hidden transition-all duration-300 group-hover:ring-1 ring-[rgba(255,255,255,0.06)]" style={{ backgroundColor: "var(--bg-elevated)" }}>
             <img src={video.thumbnail_url as string} alt={video.title as string}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               onError={e => { (e.target as HTMLImageElement).style.display = "none"; }} />
@@ -103,7 +103,7 @@ export function VideoGrid({ freeVideos, lockedVideos, totalResults, upgradeMessa
           <div className="inline-flex flex-col items-center gap-3 rounded-2xl px-8 py-6" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
             <Lock size={16} style={{ color: "var(--text-muted)" }} />
             <div className="text-[12px] font-light" style={{ color: "var(--text-secondary)" }}>{upgradeMessage}</div>
-            <button className="px-4 py-1.5 text-[11px] font-medium rounded-lg transition-colors duration-300" style={{ color: "var(--accent)", border: "1px solid var(--accent)" }}>
+            <button className="px-4 py-1.5 text-[11px] font-medium rounded-lg transition-colors duration-300" style={{ color: "var(--text-secondary)", border: "1px solid var(--border)" }}>
               Unlock Full Access
             </button>
           </div>

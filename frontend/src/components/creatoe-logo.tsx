@@ -28,7 +28,7 @@ export function CreatoeLogo({ size = "md", animate = false }: { size?: "sm" | "m
           style={{
             width: `${s.glow * 4}px`,
             height: `${s.glow * 4}px`,
-            background: "radial-gradient(circle, rgba(129, 140, 248, 0.08) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(139, 149, 165, 0.06) 0%, transparent 70%)",
             opacity: step >= 3 ? 1 : 0,
             transition: "opacity 1s ease-out",
           }}

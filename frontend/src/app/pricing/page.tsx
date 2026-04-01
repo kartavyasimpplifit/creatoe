@@ -48,10 +48,10 @@ export default function PricingPage() {
             <div key={plan.name} className="rounded-2xl p-6 flex flex-col transition-all duration-300"
               style={{
                 backgroundColor: "var(--bg-card)",
-                border: plan.highlighted ? "1px solid rgba(129,140,248,0.2)" : "1px solid var(--border)",
+                border: plan.highlighted ? "1px solid rgba(255,255,255,0.06)" : "1px solid var(--border)",
               }}>
               {plan.highlighted && (
-                <div className="text-[8px] tracking-[0.3em] uppercase mb-2" style={{ color: "var(--accent)" }}>Most Popular</div>
+                <div className="text-[8px] tracking-[0.3em] uppercase mb-2" style={{ color: "var(--text-secondary)" }}>Most Popular</div>
               )}
               <div className="text-base font-normal" style={{ color: "var(--text)" }}>{plan.name}</div>
               <div className="flex items-baseline gap-1 mt-1 mb-1">
@@ -83,8 +83,8 @@ export default function PricingPage() {
 
               <button className="w-full py-2 rounded-xl text-[12px] font-normal transition-all duration-300"
                 style={{
-                  color: plan.highlighted ? "var(--accent)" : "var(--text-muted)",
-                  border: plan.highlighted ? "1px solid var(--accent)" : "1px solid var(--border)",
+                  color: plan.highlighted ? "var(--text)" : "var(--text-muted)",
+                  border: plan.highlighted ? "1px solid rgba(255,255,255,0.15)" : "1px solid var(--border)",
                   backgroundColor: "transparent",
                 }}>
                 {plan.cta}

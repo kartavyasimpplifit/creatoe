@@ -31,11 +31,11 @@ export function DemandIntelCard({ intel, product }: {
               const isTarget = brand === product.brand;
               return (
                 <div key={brand} className="flex items-center gap-3">
-                  <span className="text-[11px] w-14 truncate font-light" style={{ color: isTarget ? "var(--accent)" : "var(--text-dim)" }}>{brand}</span>
+                  <span className="text-[11px] w-14 truncate font-light" style={{ color: isTarget ? "var(--text)" : "var(--text-dim)" }}>{brand}</span>
                   <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ backgroundColor: "var(--bg)" }}>
-                    <div className="h-full rounded-full animate-bar" style={{ width: `${pct}%`, backgroundColor: isTarget ? "var(--accent)" : "var(--bg-elevated)" }} />
+                    <div className="h-full rounded-full animate-bar" style={{ width: `${pct}%`, backgroundColor: isTarget ? "rgba(255,255,255,0.5)" : "var(--bg-elevated)" }} />
                   </div>
-                  <span className="text-[10px] w-7 text-right" style={{ color: isTarget ? "var(--accent)" : "var(--text-dim)", fontFamily: "var(--font-mono)" }}>{count}</span>
+                  <span className="text-[10px] w-7 text-right" style={{ color: isTarget ? "var(--text)" : "var(--text-dim)", fontFamily: "var(--font-mono)" }}>{count}</span>
                 </div>
               );
             })}
@@ -65,8 +65,8 @@ export function DemandIntelCard({ intel, product }: {
       )}
 
       {gap && (
-        <div className="rounded-xl p-3.5 mb-5" style={{ backgroundColor: "var(--accent-dim)", border: "1px solid rgba(129,140,248,0.1)" }}>
-          <div className="text-[11px] font-light leading-relaxed" style={{ color: "var(--accent)" }}>{gap.message}</div>
+        <div className="rounded-xl p-3.5 mb-5" style={{ backgroundColor: "var(--bg-elevated)", border: "1px solid var(--border)" }}>
+          <div className="text-[11px] font-light leading-relaxed" style={{ color: "var(--text-secondary)" }}>{gap.message}</div>
           <div className="text-[10px] mt-1.5 font-light" style={{ color: "var(--text-muted)" }}>Est. cost: {formatINR(gap.estimated_cost_to_close)}</div>
         </div>
       )}
@@ -78,7 +78,7 @@ export function DemandIntelCard({ intel, product }: {
         <div className="grid grid-cols-3 gap-3 text-center">
           {[
             { label: "budget", value: formatINR(scenario.estimated_budget_min), color: "var(--text)" },
-            { label: "reach", value: formatNumber(scenario.estimated_reach), color: "var(--accent)" },
+            { label: "reach", value: formatNumber(scenario.estimated_reach), color: "var(--text)" },
             { label: "cpv", value: `₹${scenario.estimated_cpv.toFixed(2)}`, color: "var(--gold)" },
           ].map(s => (
             <div key={s.label}>

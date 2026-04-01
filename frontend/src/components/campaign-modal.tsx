@@ -32,7 +32,7 @@ export function CampaignModal({ data, onClose, productUrl }: {
             {[
               { label: "creators", value: s.creator_count.toString(), color: "var(--text)" },
               { label: "budget", value: `${formatINR(s.budget_min)} - ${formatINR(s.budget_max)}`, color: "var(--success)" },
-              { label: "reach", value: formatNumber(s.estimated_reach), color: "var(--accent)" },
+              { label: "reach", value: formatNumber(s.estimated_reach), color: "var(--text)" },
               { label: "avg cpv", value: `₹${s.avg_cpv.toFixed(2)}`, color: "var(--gold)" },
             ].map(m => (
               <div key={m.label} className="rounded-xl p-3 text-center" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>

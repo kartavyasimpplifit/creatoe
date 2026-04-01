@@ -11,7 +11,7 @@ export function CampaignBar({ count, onView, onExport }: {
     <div className="fixed bottom-0 left-[48px] right-0 z-40 glass" style={{ borderTop: "1px solid var(--border)" }}>
       <div className="max-w-[1400px] mx-auto px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-medium text-white" style={{ backgroundColor: "var(--accent)" }}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center text-[13px] font-medium text-black" style={{ backgroundColor: "var(--text)" }}>
             {count}
           </div>
           <div>
@@ -27,7 +27,7 @@ export function CampaignBar({ count, onView, onExport }: {
           </button>
           <button onClick={onView}
             className="px-4 py-1.5 text-[11px] font-medium rounded-lg flex items-center gap-1.5 transition-all duration-300"
-            style={{ color: "var(--accent)", border: "1px solid var(--accent)" }}>
+            style={{ color: "var(--text)", border: "1px solid var(--text)" }}>
             View Campaign <ArrowRight size={11} />
           </button>
         </div>

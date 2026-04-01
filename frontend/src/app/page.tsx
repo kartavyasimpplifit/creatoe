@@ -173,8 +173,8 @@ export default function Home() {
                   className="px-3 py-1 rounded-full text-[10px] font-normal transition-all duration-300"
                   style={{
                     color: filters.tier === t ? "var(--text)" : "var(--text-dim)",
-                    backgroundColor: filters.tier === t ? "var(--accent-dim)" : "transparent",
-                    border: `1px solid ${filters.tier === t ? "rgba(129,140,248,0.2)" : "var(--border)"}`,
+                    backgroundColor: filters.tier === t ? "var(--bg-elevated)" : "transparent",
+                    border: `1px solid ${filters.tier === t ? "rgba(255,255,255,0.08)" : "var(--border)"}`,
                   }}>
                   {t || "All"}
                 </button>
@@ -190,8 +190,8 @@ export default function Home() {
                     className="px-3 py-1 rounded-full text-[10px] font-normal transition-all duration-300"
                     style={{
                       color: filters.language === lang ? "var(--text)" : "var(--text-dim)",
-                      backgroundColor: filters.language === lang ? "var(--accent-dim)" : "transparent",
-                      border: `1px solid ${filters.language === lang ? "rgba(129,140,248,0.2)" : "var(--border)"}`,
+                      backgroundColor: filters.language === lang ? "var(--bg-elevated)" : "transparent",
+                      border: `1px solid ${filters.language === lang ? "rgba(255,255,255,0.08)" : "var(--border)"}`,
                     }}>
                     {lang.charAt(0).toUpperCase() + lang.slice(1)} <span style={{ opacity: 0.4 }}>{count}</span>
                   </button>
@@ -265,7 +265,7 @@ export default function Home() {
 
             {searchData.upgrade_message && (
               <div className="mt-10 text-center">
-                <span className="text-[11px] font-light" style={{ color: "var(--accent)" }}>{searchData.upgrade_message}</span>
+                <span className="text-[11px] font-light" style={{ color: "var(--text-secondary)" }}>{searchData.upgrade_message}</span>
               </div>
             )}
           </div>

@@ -35,7 +35,7 @@ export function CreatorPanel({ creatorId, productUrl, onClose, onAddToCampaign, 
               onClick={() => onAddToCampaign(creatorId)}
               className={`text-[11px] px-3 py-1.5 rounded-lg font-semibold transition-all duration-200 flex items-center gap-1.5 ${
                 isInCampaign
-                  ? "bg-[var(--accent)] text-white"
+                  ? "bg-[var(--text)] text-black"
                   : "bg-[var(--bg-card)] text-[var(--text-muted)] hover:text-[var(--text)] border border-[var(--border)]"
               }`}
             >
@@ -64,12 +64,12 @@ export function CreatorPanel({ creatorId, productUrl, onClose, onAddToCampaign, 
                 <h2 className="text-lg font-bold text-[var(--text)]">{d.name as string}</h2>
                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                   <span className="text-sm text-[var(--text-secondary)]">{formatNumber(d.subscriber_count as number)} subs</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--accent-dim)] text-[var(--accent)] font-semibold capitalize">{d.tier as string}</span>
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--bg-elevated)] text-[var(--text-secondary)] font-semibold capitalize">{d.tier as string}</span>
                   <span className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--bg-card)] text-[var(--text-muted)] capitalize">{(d.primary_language as string) || "en"}</span>
                 </div>
                 {d.custom_url && (
                   <a href={`https://youtube.com/${d.custom_url}`} target="_blank" rel="noopener noreferrer"
-                    className="text-xs text-[var(--accent)] hover:underline mt-1.5 inline-flex items-center gap-1">
+                    className="text-xs text-[var(--text-secondary)] hover:underline mt-1.5 inline-flex items-center gap-1">
                     <ExternalLink size={10} />
                     youtube.com/{d.custom_url as string}
                   </a>
@@ -110,7 +110,7 @@ export function CreatorPanel({ creatorId, productUrl, onClose, onAddToCampaign, 
 
                   {evidence.length > 0 && (
                     <div className="mt-4 pt-4 border-t border-[var(--border)]">
-                      <div className="text-[10px] text-[var(--accent)] uppercase tracking-[0.15em] mb-2.5 font-bold">Brand Evidence</div>
+                      <div className="text-[10px] text-[var(--text-secondary)] uppercase tracking-[0.15em] mb-2.5 font-bold">Brand Evidence</div>
                       {evidence.map((ev, i) => (
                         <a key={i} href={`https://youtube.com/watch?v=${ev.video_id}`} target="_blank" rel="noopener noreferrer"
                           className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-[var(--bg-elevated)] transition-colors mb-1">
@@ -184,7 +184,7 @@ export function CreatorPanel({ creatorId, productUrl, onClose, onAddToCampaign, 
                           </div>
                         </div>
                         <div className="p-2.5">
-                          <div className="text-[10px] text-[var(--text)] line-clamp-2 font-medium leading-snug group-hover:text-[var(--accent)] transition-colors">{v.title}</div>
+                          <div className="text-[10px] text-[var(--text)] line-clamp-2 font-medium leading-snug group-hover:text-[var(--text-secondary)] transition-colors">{v.title}</div>
                           <div className="text-[9px] text-[var(--text-muted)] mt-1">
                             {formatNumber(v.view_count)} views · {v.engagement_rate.toFixed(1)}%
                           </div>
@@ -197,13 +197,13 @@ export function CreatorPanel({ creatorId, productUrl, onClose, onAddToCampaign, 
             })()}
 
             {/* Upsell nudge */}
-            <div className="bg-[var(--accent-dim)] border border-[var(--accent)]/15 rounded-xl p-4">
+            <div className="bg-[var(--bg-elevated)] border border-[var(--border)] rounded-xl p-4">
               <div className="flex items-start gap-2.5">
-                <div className="w-5 h-5 rounded-full bg-[var(--accent)]/20 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                <div className="w-5 h-5 rounded-full bg-[var(--bg-card)] flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" strokeWidth="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                 </div>
                 <div className="text-[11px] text-[var(--text-muted)] leading-relaxed">
-                  <span className="text-[var(--accent)] font-semibold">Connect Instagram</span> to see cross-platform reach, Reel performance, and combined campaign pricing.
+                  <span className="text-[var(--text)] font-semibold">Connect Instagram</span> to see cross-platform reach, Reel performance, and combined campaign pricing.
                 </div>
               </div>
             </div>

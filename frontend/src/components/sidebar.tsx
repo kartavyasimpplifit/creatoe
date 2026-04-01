@@ -23,7 +23,7 @@ export function Sidebar({ active, onNavigate, credits }: {
       style={{ background: "linear-gradient(180deg, #080808 0%, #0a0a0a 100%)", borderRight: "1px solid #141414" }}>
       <div className="h-14 flex items-center px-3.5 flex-shrink-0" style={{ borderBottom: "1px solid #141414" }}>
         <div className="group-hover:hidden flex items-center justify-center w-5">
-          <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "var(--accent)", boxShadow: "0 0 16px rgba(129,140,248,0.15)" }}>
+          <div className="w-6 h-6 rounded-md flex items-center justify-center" style={{ backgroundColor: "var(--bg-elevated)" }}>
             <span className="text-white text-[9px] font-semibold">Ce</span>
           </div>
         </div>
@@ -39,14 +39,14 @@ export function Sidebar({ active, onNavigate, credits }: {
             onClick={() => onNavigate(item.id)}
             className="relative flex items-center gap-3 px-2 py-2.5 rounded-lg w-full text-left transition-all duration-300"
             style={{
-              color: active === item.id ? "var(--accent)" : "var(--text-muted)",
-              backgroundColor: active === item.id ? "var(--accent-dim)" : "transparent",
+              color: active === item.id ? "var(--text)" : "var(--text-muted)",
+              backgroundColor: active === item.id ? "var(--bg-elevated)" : "transparent",
             }}
             onMouseEnter={e => { if (active !== item.id) (e.currentTarget.style.color = "var(--text-secondary)"); }}
             onMouseLeave={e => { if (active !== item.id) (e.currentTarget.style.color = "var(--text-muted)"); }}
           >
             {active === item.id && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-full" style={{ backgroundColor: "var(--accent)" }} />
+              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-full" style={{ backgroundColor: "var(--text)" }} />
             )}
             <div className="flex-shrink-0 w-5 flex justify-center">{item.icon}</div>
             <span className="text-[11px] font-normal whitespace-nowrap hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100">
@@ -60,7 +60,7 @@ export function Sidebar({ active, onNavigate, credits }: {
         <div className="rounded-lg p-2" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)" }}>
           <div className="flex items-center gap-2">
             <div className="w-5 flex justify-center flex-shrink-0">
-              <Zap size={12} style={{ color: "var(--accent)" }} />
+              <Zap size={12} style={{ color: "var(--text-secondary)" }} />
             </div>
             <div className="hidden group-hover:block opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100">
               <div className="text-[9px]" style={{ color: "var(--text-dim)" }}>Pro</div>

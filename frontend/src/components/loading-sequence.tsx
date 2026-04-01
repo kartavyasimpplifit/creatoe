@@ -20,7 +20,7 @@ function ProgressRing({ progress }: { progress: number }) {
   return (
     <svg width="88" height="88" className="mb-6">
       <circle cx="44" cy="44" r={radius} fill="none" stroke="var(--border)" strokeWidth="1.5" />
-      <circle cx="44" cy="44" r={radius} fill="none" stroke="var(--accent)" strokeWidth="1.5"
+      <circle cx="44" cy="44" r={radius} fill="none" stroke="var(--text)" strokeWidth="1.5"
         strokeDasharray={circumference} strokeDashoffset={offset} strokeLinecap="round"
         style={{ transition: "stroke-dashoffset 0.5s ease-out", transform: "rotate(-90deg)", transformOrigin: "center" }} />
       <text x="44" y="48" textAnchor="middle" fill="var(--text)" fontSize="14" fontFamily="var(--font-mono)" fontWeight="300">
@@ -47,7 +47,7 @@ export function LoadingSequence({ step, url, product, errorMessage }: {
           <div className="text-[9px] tracking-[0.3em] uppercase mb-2 font-normal" style={{ color: "var(--text-dim)", fontFamily: "var(--font-mono)" }}>
             Analyzing
           </div>
-          <div className="rounded-xl px-4 py-2 text-[11px] font-light truncate max-w-sm" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", color: "var(--accent)", fontFamily: "var(--font-mono)" }}>
+          <div className="rounded-xl px-4 py-2 text-[11px] font-light truncate max-w-sm" style={{ backgroundColor: "var(--bg-card)", border: "1px solid var(--border)", color: "var(--text-secondary)", fontFamily: "var(--font-mono)" }}>
             {url.length > 50 ? url.slice(0, 50) + "..." : url || "Searching..."}
           </div>
         </div>
@@ -95,7 +95,7 @@ export function LoadingSequence({ step, url, product, errorMessage }: {
                     {isDone ? (
                       <Check size={11} style={{ color: "var(--success)" }} />
                     ) : isActive ? (
-                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "var(--accent)", boxShadow: "0 0 8px rgba(129,140,248,0.4)" }} />
+                      <div className="w-2 h-2 rounded-full" style={{ backgroundColor: "var(--text)", boxShadow: "0 0 8px rgba(255,255,255,0.2)" }} />
                     ) : (
                       <Circle size={6} style={{ color: "var(--border)" }} />
                     )}

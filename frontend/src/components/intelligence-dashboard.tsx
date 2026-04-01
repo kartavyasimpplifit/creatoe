@@ -4,7 +4,7 @@ import type { StatsResponse } from "@/lib/api";
 import { formatNumber } from "@/lib/api";
 
 const TIER_COLORS: Record<string, string> = {
-  mega: "#a78bfa", macro: "#60a5fa", mid: "#34d399", micro: "#fbbf24", nano: "#888",
+  mega: "#e8e8e8", macro: "#bbb", mid: "#999", micro: "#777", nano: "#555",
 };
 
 const LANG_LABELS: Record<string, string> = {
@@ -31,7 +31,7 @@ export function IntelligenceDashboard({ stats }: { stats: StatsResponse | null }
     <div className="max-w-[1100px] mx-auto px-8 pt-16 pb-32 hero-glow">
       <div className="relative z-10">
         <div className="text-center mb-16 animate-slide-up">
-          <h1 className="text-3xl font-light tracking-tight text-gradient mb-3">Creator Intelligence</h1>
+          <h1 className="text-3xl font-light tracking-tight mb-3" style={{ color: "var(--text)" }}>Creator Intelligence</h1>
           <p className="text-[13px] font-light" style={{ color: "var(--text-muted)" }}>
             Real-time landscape across {stats.total_creators.toLocaleString()} creators
           </p>
@@ -88,8 +88,8 @@ export function IntelligenceDashboard({ stats }: { stats: StatsResponse | null }
                   </span>
                   <span className="text-[11px] font-light" style={{ color: "var(--text-muted)", fontFamily: "var(--font-mono)" }}>{count}</span>
                 </div>
-                <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: "var(--bg-elevated)" }}>
-                  <div className="h-full rounded-full animate-bar" style={{ width: `${(count / langTotal) * 100}%`, backgroundColor: "var(--accent)", opacity: 0.5 }} />
+                  <div className="h-1 rounded-full overflow-hidden" style={{ backgroundColor: "var(--bg-elevated)" }}>
+                  <div className="h-full rounded-full animate-bar" style={{ width: `${(count / langTotal) * 100}%`, backgroundColor: "rgba(255,255,255,0.3)" }} />
                 </div>
               </div>
             ))}
