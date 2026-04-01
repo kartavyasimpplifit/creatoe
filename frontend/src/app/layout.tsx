@@ -15,7 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-[var(--bg)]">{children}</body>
+      <body className="min-h-screen">{children}</body>
     </html>
   );
 }

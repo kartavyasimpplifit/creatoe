@@ -130,7 +130,7 @@ export default function Home() {
   }) || [];
 
   return (
-    <div className="min-h-screen flex bg-[var(--bg)]">
+    <div className="min-h-screen flex">
       <Sidebar active={navPage} onNavigate={handleNav} credits={credits} />
 
       <main className="flex-1 ml-[56px]">

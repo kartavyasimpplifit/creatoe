@@ -1,47 +1,52 @@
 @import "tailwindcss";
 
-:root {
-  --bg: #000000;
-  --bg-surface: #0a0a0a;
-  --bg-card: #161616;
-  --bg-card-hover: #1c1c1c;
-  --bg-elevated: #222222;
-  --border: #222;
-  --border-light: #2a2a2a;
-  --text: #ffffff;
-  --text-secondary: #aaaaaa;
-  --text-muted: #555555;
-  --text-dim: #444444;
-  --accent: #818cf8;
-  --accent-hover: #a5b4fc;
-  --accent-dim: rgba(129, 140, 248, 0.08);
-  --red: #fe2c55;
-  --green: #4ade80;
-  --success: #4ade80;
-  --amber: #fbbf24;
-  --warning: #fbbf24;
-  --danger: #fe2c55;
-  --gold: #d4a853;
-  --fk-orange: #f97316;
-  --amz-yellow: #facc15;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+@layer base {
+  :root {
+    --bg: #000000;
+    --bg-surface: #0a0a0a;
+    --bg-card: #161616;
+    --bg-card-hover: #1c1c1c;
+    --bg-elevated: #222222;
+    --border: #222;
+    --border-light: #2a2a2a;
+    --text: #ffffff;
+    --text-secondary: #aaaaaa;
+    --text-muted: #555555;
+    --text-dim: #444444;
+    --accent: #818cf8;
+    --accent-hover: #a5b4fc;
+    --accent-dim: rgba(129, 140, 248, 0.08);
+    --red: #fe2c55;
+    --green: #4ade80;
+    --success: #4ade80;
+    --amber: #fbbf24;
+    --warning: #fbbf24;
+    --danger: #fe2c55;
+    --gold: #d4a853;
+    --fk-orange: #f97316;
+    --amz-yellow: #facc15;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background-color: #000000;
+    color: #ffffff;
+  }
+
+  body {
+    font-family: "Inter", -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(129, 140, 248, 0.3); }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 99px; }
 }
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: "Inter", -apple-system, system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-::selection { background: rgba(129, 140, 248, 0.3); }
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 99px; }
 
 /* ─── Keyframes ─── */
 @keyframes fadeIn {
